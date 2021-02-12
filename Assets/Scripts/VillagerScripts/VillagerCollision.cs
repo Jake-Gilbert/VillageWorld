@@ -8,19 +8,16 @@ public class VillagerCollision : MonoBehaviour
     {
         if (collision.collider.CompareTag("TouchingBush"))
         {
-            //Fruit fruit = collision.collider.GetComponent(typeof(Fruit)) as Fruit;
-            //if(fruit.pickable)
-            //{
+     
             fruitCount++;
             Destroy(collision.gameObject);
-            //}
             
         }
 
         if (collision.collider.CompareTag("Boundary"))
         {
             agentVillager villager = GetComponentInParent(typeof(agentVillager)) as agentVillager;
-            villager.speed *= -1;
+            villager.moveDirection *= -1;
                   
          
         }

@@ -25,7 +25,6 @@ public class FruitBushController : MonoBehaviour
             float minimumZ = 0.45F;
             while(bushesToSpawn > 0)     
             {
-               // System.Random randomPoint = new System.Random();
                 GameObject fruitBush = (GameObject)Instantiate(Resources.Load("FruitBush"), new Vector3(randomValue.Next(-120, 120), 1F, randomValue.Next(-120, 120)), Quaternion.identity);
                 fruitBush.transform.parent = hect.transform;
                 fruitBush.transform.localPosition = new Vector3(GenerateRandomFloat(-minimumX, minimumX, randomValue), 1F, GenerateRandomFloat(-minimumZ, minimumZ, randomValue));                               
