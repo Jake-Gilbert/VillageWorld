@@ -108,3 +108,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e85969a88bfadc4f94a4d138024fa4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorZone: {fileID: 0}
+  fruitCount: 0
