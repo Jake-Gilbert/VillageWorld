@@ -6,59 +6,68 @@ public class FloorSpawner : MonoBehaviour
 {
     public int sizeX;
     public int sizeZ;
+
+    public int numOfCols;
+    public int numOfRows;
     // Start is called before the first frame update
     void Start()
     {
-        GameObject floor = (GameObject)Instantiate(Resources.Load("Floor"), new Vector3(0, 0, 0), Quaternion.identity);
-        floor.transform.localPosition = new Vector3(0, -1F, 0);
-        floor.transform.localScale = new Vector3(sizeX, 1, sizeZ);
+        GameObject floor = (GameObject)Instantiate(Resources.Load("Floor"), new Vector3(-sizeX/2, 0, -sizeX/2), Quaternion.identity);
+        floor.GetComponent<Terrain>().terrainData.size = new Vector3(sizeX, 0, sizeZ); 
         floor.AddComponent<FloorInteractions>();
         floor.tag = "Boundary";
-        System.Random random = new System.Random();
 
         //Four boundary walls
         BoxCollider north = floor.AddComponent(typeof(BoxCollider)) as BoxCollider;
-        north.center = new Vector3(-0.5F, 0, 0);
-        north.size = new Vector3(0, 50, 1);
-
-        BoxCollider south = floor.AddComponent(typeof(BoxCollider)) as BoxCollider;
-        south.center = new Vector3(0.5F, 0, 0);
-        south.size = new Vector3(0, 50, 1);
-       
+        north.center = new Vector3(sizeX / 2, 0, sizeZ);
+        north.size = new Vector3(sizeX, 50, 0);
 
         BoxCollider east = floor.AddComponent(typeof(BoxCollider)) as BoxCollider;
-        east.center = new Vector3(0F, 0, 0.5F);
-        east.size = new Vector3(1, 50, 0);
+        east.center = new Vector3(sizeX, 0, sizeZ/2);
+        east.size = new Vector3(0, 50, sizeX);
+
+        BoxCollider south = floor.AddComponent(typeof(BoxCollider)) as BoxCollider;
+        south.center = new Vector3(sizeX/2, 0, 0);
+        south.size = new Vector3(sizeX, 50, 0);
+
 
         BoxCollider west = floor.AddComponent(typeof(BoxCollider)) as BoxCollider;
-        west.center = new Vector3(0F, 0, -0.5F);
-        west.size = new Vector3(1, 50, 0);
+        west.center = new Vector3(0, 0, sizeZ/2);
+        west.size = new Vector3(0, 50, sizeZ);
+
+       
 
         float floorX = gameObject.transform.localPosition.x;
         float floorZ = gameObject.transform.localPosition.z;
-        GameObject floorzone1 = (GameObject)Instantiate(Resources.Load("CollectionZone"), new Vector3(random.Next(-120, 120), -0.5F, random.Next(-120, 120)), Quaternion.identity);
+        GameObject floorzone = (GameObject)Instantiate(Resources.Load("CollectionZone"), new Vector3(Random.Range(-floorX, -floorZ), 0.5F, Random.Range(-floorZ, floorZ)), Quaternion.identity);
+        floorzone.tag = ("Zone");
+        FloorZone floorzoneScript = floorzone.GetComponent(typeof(FloorZone)) as FloorZone;
+        floorzoneScript.floorZone = floorzone;
+        floorzoneScript.floor = floor;
 
-        float shapeSizeZ = floor.transform.localScale.z / 4;
-        float shapeSizeX = floor.transform.localScale.x / 4;
+        float shapeSizeZ = sizeZ / numOfCols;
+        float shapeSizeX = sizeX / numOfRows;
 
-        float hectareZ = -floor.transform.localScale.z/2 + (shapeSizeZ / 2);
-        float hectareX = -floor.transform.localScale.x/2 + (shapeSizeX / 2);
+        float hectareZ = sizeZ /2 - (shapeSizeZ/2);
+        float hectareX = sizeX  /2 - (shapeSizeX/2);
 
-        for (int i = 0; i< 4; i++)
+        for (int i = 0; i< numOfCols; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < numOfRows; j++)
             {
                 GameObject hectare = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 hectare.name = "Hectare";
                 hectare.tag = "Hectare";
+                //hectare.GetComponent<MeshRenderer>().enabled = false;
                 hectare.transform.position = new Vector3(hectareX, 0, hectareZ);
                 hectare.transform.localScale = new Vector3(shapeSizeX, 1, shapeSizeZ);
 
 
-                hectareZ += shapeSizeZ;
+                hectareZ -= shapeSizeZ;
             }
-            hectareX += shapeSizeX;
-            hectareZ = -floor.transform.localScale.z / 2 + (shapeSizeZ / 2);
+            hectareX -= shapeSizeX;
+            //hectareZ = -floor.transform.localScale.z / 2 + (shapeSizeZ / 2);
+            hectareZ = sizeZ / 2 - (shapeSizeZ / 2);
         }
 
     }

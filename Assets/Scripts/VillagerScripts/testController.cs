@@ -9,7 +9,6 @@ public class testController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.transform.localPosition += new Vector3(0, -1F, 0);
     }
     // Update is called once per frame
     void Update()

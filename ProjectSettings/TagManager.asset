@@ -9,6 +9,7 @@ TagManager:
   - TouchingBush
   - FruitBush
   - Hectare
+  - Zone
   layers:
   - Default
   - TransparentFX

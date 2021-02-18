@@ -16,8 +16,6 @@ public class FruitBush : MonoBehaviour
             GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), Random.insideUnitSphere + fruitBush.transform.position, Quaternion.identity);
             fruit.transform.localPosition = new Vector3(fruit.transform.localPosition.x, fruit.transform.localPosition.y + 1F, fruit.transform.localPosition.z) ;
             fruit.transform.parent = fruitBush.transform;
-            //GameObject fruitBush = gameObject.GetComponentInParent<Bush>();
-           //var FruitBush = (GameObject)
         }
     }
 
