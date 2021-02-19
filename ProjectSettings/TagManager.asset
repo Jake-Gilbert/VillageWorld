@@ -10,6 +10,7 @@ TagManager:
   - FruitBush
   - Hectare
   - Zone
+  - Bush
   layers:
   - Default
   - TransparentFX
