@@ -58,7 +58,7 @@ public class FloorSpawner : MonoBehaviour
                 GameObject hectare = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 hectare.name = "Hectare";
                 hectare.tag = "Hectare";
-                //hectare.GetComponent<MeshRenderer>().enabled = false;
+                hectare.GetComponent<MeshRenderer>().enabled = false;
                 hectare.transform.position = new Vector3(hectareX, 0, hectareZ);
                 hectare.transform.localScale = new Vector3(shapeSizeX, 1, shapeSizeZ);
 
@@ -66,15 +66,10 @@ public class FloorSpawner : MonoBehaviour
                 hectareZ -= shapeSizeZ;
             }
             hectareX -= shapeSizeX;
-            //hectareZ = -floor.transform.localScale.z / 2 + (shapeSizeZ / 2);
             hectareZ = sizeZ / 2 - (shapeSizeZ / 2);
         }
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-     
-    }
+  
 }

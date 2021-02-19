@@ -32,7 +32,7 @@ public class FloorZone : MonoBehaviour
                 Debug.Log(coordinates[0] + "+ " + coordinates[1]);
                 if (PositionIsAvailable(coordinates[0], coordinates[1], villagers))
                 {
-                    villager = (GameObject)Instantiate(Resources.Load("agentVillager"), new Vector3(Random.Range(0, 0), 0, Random.Range(0, 0)) , Quaternion.identity);
+                    villager = (GameObject)Instantiate(Resources.Load("agentVillager"), new Vector3(0, 0, coordinates[1]) , Quaternion.identity);
                     villager.transform.parent = floorZone.transform;
                     villager.transform.position = new Vector3(floorZone.transform.position.x, 1F, floorZone.transform.position.z);
                    
