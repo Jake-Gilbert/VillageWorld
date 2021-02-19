@@ -5,7 +5,7 @@ using UnityEngine;
 public class agentVillager : MonoBehaviour
 {
     
-    private const double SWITCH_DIRECTION_CHANCE_X = .5;
+    //private const double SWITCH_DIRECTION_CHANCE_X = .5;
     public GameObject floorZone;
     public GameObject villager;
     public float energy;
