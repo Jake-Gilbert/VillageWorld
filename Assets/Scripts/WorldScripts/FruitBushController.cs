@@ -22,19 +22,17 @@ public class FruitBushController : MonoBehaviour
             {
                 GameObject fruitBush = (GameObject)Instantiate(Resources.Load("FruitBush"), new Vector3(Random.Range(-120, 120), 1F, Random.Range(-120, 120)), Quaternion.identity);
                 fruitBush.transform.parent = hect.transform;
-                fruitBush.transform.localPosition = new Vector3(Random.Range(-boundary, boundary), 0F, Random.Range(-boundary, boundary));                               
+                fruitBush.transform.localPosition = new Vector3(Random.Range(-boundary, boundary), 0F, Random.Range(-boundary, boundary));
+                fruitBush.transform.parent = null;
                 MeshRenderer renderer = fruitBush.GetComponent<MeshRenderer>();
-                Color colour = renderer.material.color;
-                colour.a = 0.5f;
-                renderer.material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 fruitBush.tag = "FruitBush";
                 FruitBush fruitBushScript = fruitBush.GetComponent(typeof(FruitBush)) as FruitBush;
-                //fruitBushScript.bush = fruitBush.transform.Find("Bush");
                 fruitBushScript.bush = fruitBush.transform.GetChild(0).gameObject;
+                
                 bushesToSpawn--;
-
-            }
-            
+                        
+            }           
+            Destroy(hect);            
         }
         Debug.Log(totalBushes);
 

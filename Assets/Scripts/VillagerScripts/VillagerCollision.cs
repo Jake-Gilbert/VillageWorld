@@ -6,9 +6,16 @@ public class VillagerCollision : MonoBehaviour
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
+
+        if(collision.collider.CompareTag("FruitBush"))
+        {
+            agentVillager villager = GetComponentInParent(typeof(agentVillager)) as agentVillager;
+        }
+
         if (collision.collider.CompareTag("TouchingBush"))
         {
-     
+            Debug.Log("HGe");
+
             fruitCount++;
             Destroy(collision.gameObject);
             

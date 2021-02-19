@@ -18,28 +18,27 @@ public class FloorZone : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        float floorZoneX = floorZone.transform.localPosition.x;
+        float floorZoneZ = floorZone.transform.localPosition.z;
         villagers = new List<GameObject>();
-        //floorZone.transform.parent = floor.transform;
         //floorZone.transform = new Vector3(0.3F, 1F, 0.3F);
-        
+        float spawnPointX =  0.5F ;
+        float spawnPointZ = 0.5F ;
+
+
         int random = Random.Range(3, 6);
         for (int i = 0; i < random; i++)
         {
-            GameObject villager = null;
-            while (villager == null)
-            {
-                float[] coordinates = GenerateCoordinates();
-                Debug.Log(coordinates[0] + "+ " + coordinates[1]);
-                if (PositionIsAvailable(coordinates[0], coordinates[1], villagers))
-                {
-                    villager = (GameObject)Instantiate(Resources.Load("agentVillager"), new Vector3(0, 0, coordinates[1]) , Quaternion.identity);
-                    villager.transform.parent = floorZone.transform;
-                    villager.transform.position = new Vector3(floorZone.transform.position.x, 1F, floorZone.transform.position.z);
-                   
-                    villagers.Add(villager);
-                }
+            
+            GameObject spawnPoint = new GameObject();
+            spawnPoint.transform.position = floorZone.transform.position;
+            spawnPoint.transform.parent = floorZone.transform;
+            spawnPoint.transform.localPosition = new Vector3(Random.Range(-spawnPointX , spawnPointX), 1F,  Random.Range(-spawnPointZ, spawnPointZ));
+            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);                 
+            villagers.Add(villager);
+                
 
-            }
+            
         }
     }
 

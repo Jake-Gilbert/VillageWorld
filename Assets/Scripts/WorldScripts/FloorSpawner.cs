@@ -39,7 +39,7 @@ public class FloorSpawner : MonoBehaviour
 
         float floorX = gameObject.transform.localPosition.x;
         float floorZ = gameObject.transform.localPosition.z;
-        GameObject floorzone = (GameObject)Instantiate(Resources.Load("CollectionZone"), new Vector3(Random.Range(-floorX, -floorZ), 0.5F, Random.Range(-floorZ, floorZ)), Quaternion.identity);
+        GameObject floorzone = (GameObject)Instantiate(Resources.Load("CollectionZone"), new Vector3(Random.Range(-floorX, -floorZ), 0F, Random.Range(-floorZ, floorZ)), Quaternion.identity);
         floorzone.tag = ("Zone");
         FloorZone floorzoneScript = floorzone.GetComponent(typeof(FloorZone)) as FloorZone;
         floorzoneScript.floorZone = floorzone;
@@ -68,6 +68,7 @@ public class FloorSpawner : MonoBehaviour
             hectareX -= shapeSizeX;
             hectareZ = sizeZ / 2 - (shapeSizeZ / 2);
         }
+        
 
     }
 
