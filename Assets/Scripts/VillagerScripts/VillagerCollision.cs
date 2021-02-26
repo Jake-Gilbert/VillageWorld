@@ -3,27 +3,33 @@
 public class VillagerCollision : MonoBehaviour
 {
     public int fruitCount = 0;
+    public GameObject nearestBush;
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
+     
+      //  if (collision.collider.CompareTag("FruitBush"))
+     //   {
+         //   if(collision.collider.gameObject == nearestBush)
+     //       {
+       //         AgentVillager villager = FindObjectOfType<AgentVillager>();
+        //        villager.motionless = true;
 
-        if(collision.collider.CompareTag("FruitBush"))
-        {
-            agentVillager villager = GetComponentInParent(typeof(agentVillager)) as agentVillager;
-        }
+     //       }
 
+
+    ///    }
         if (collision.collider.CompareTag("TouchingBush"))
         {
-            Debug.Log("HGe");
-
-            fruitCount++;
-            Destroy(collision.gameObject);
+       //     AgentVillager villager = FindObjectOfType<AgentVillager>();
+      //      villager.fruitCollection.Add(1);
+       //     Destroy(collision.collider.gameObject);
             
         }
 
         if (collision.collider.CompareTag("Boundary"))
         {
-            agentVillager villager = GetComponentInParent(typeof(agentVillager)) as agentVillager;
+            AgentVillager villager = GetComponentInParent(typeof(AgentVillager)) as AgentVillager;
             villager.moveDirection *= -1;
                   
          

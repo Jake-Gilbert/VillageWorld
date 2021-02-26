@@ -2,27 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class agentVillager : MonoBehaviour
+public class AgentVillager : MonoBehaviour
 {
     
     public GameObject floorZone;
     public GameObject villager;
     public GameObject sightSphere;
-    public float energy;
+    public GameObject closestBush;
+    public RectTransform energyBar;
+    public List<int> fruitCollection;
+    public float currentEnergy;
     public float baseSpeed;
     public Vector3 moveDirection;
+    public bool motionless;
+    public bool bushSeen;
+    int fruitHeld;
     private float switchDirectionCounter;
     private CharacterController character;
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("Boundary"))
+        {
+            moveDirection *= -1;
+        }
 
+        if (hit.gameObject.CompareTag("Bush") && hit.gameObject == closestBush)
+        {
+            motionless = true;
+        }
+    }
     void Start()
     {
+        fruitHeld = 0;
+        fruitCollection = new List<int>();
+        motionless = false;
         villager = gameObject;
-        sightSphere = villager.transform.GetChild(3).gameObject;
-        energy = 50F;
+        currentEnergy = 100F;
         character = GetComponent<CharacterController>();
         baseSpeed = 10F;
-        moveDirection = new Vector3(1, -1, 1);
+        moveDirection = new Vector3(1, 0, 1);
         moveDirection *= baseSpeed * Time.deltaTime;
         switchDirectionCounter = 0;
         ChangeDirection();
@@ -32,32 +51,59 @@ public class agentVillager : MonoBehaviour
 
     void ChangeDirection()
     {
-
+            
             moveDirection.z = ( baseSpeed) * (Random.value > 0.5 ? 1 : -1);
             moveDirection.x = (baseSpeed ) * (Random.value > 0.5 ? 1 : -1);
-            moveDirection.y = -1;
+            moveDirection.y = 0;
 
         moveDirection = transform.TransformDirection(moveDirection);
     }
 
     void Update()
     {
-        RaycastHit hit;
-        Ray lineOfSight = new Ray(villager.transform.position, Vector3.forward);
-        energy -= Time.deltaTime;
-        Debug.DrawRay(villager.transform.position, moveDirection);
-        if (energy <= 0)
+        currentEnergy -= Time.deltaTime * 2;
+        energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
+        if (currentEnergy <= 0)
         {
             Destroy(gameObject);
         }
-        
-        if(Physics.Raycast(lineOfSight, out hit, 20))
+
+        if(fruitCollection.Count > 0)
         {
-            if(hit.collider.tag == "Bush")
+            bool placed = false;
+            GameObject floorZone = FindObjectOfType<FloorZone>().gameObject;
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, floorZone.transform.position, 1F);
+            if (!placed)
+            {                                 
+                FloorZone floor = FindObjectOfType<FloorZone>();
+                floor.PlaceFruit(fruitCollection);
+                placed = true;
+                fruitCollection = new List<int>();
+            }
+
+         
+
+
+        }
+
+        if (bushSeen)
+        {
+            while (Vector3.Distance(closestBush.transform.position, gameObject.transform.position) > 1F)
             {
-                villager.transform.position = Vector3.MoveTowards(villager.transform.position, hit.collider.gameObject.transform.position, 20);
+                    gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, closestBush.transform.position, 20);
+
             }
         }
+
+        if (motionless)
+        {
+            moveDirection = Vector3.zero;
+            //StartMotion();
+        }
+
+
+
+
         if (character != null)
         {
             character.Move(moveDirection * Time.deltaTime);
@@ -71,4 +117,20 @@ public class agentVillager : MonoBehaviour
             switchDirectionCounter = 0;
         }
     }
+    
+    IEnumerator StopMotion()
+    {
+        moveDirection = Vector3.zero;
+        Debug.Log("Starting");
+        yield return new WaitForSeconds(3);
+
+    }
+
+    void StartMotion()
+    {
+         ChangeDirection();
+    
+    }
+
+ 
 }

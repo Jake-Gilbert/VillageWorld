@@ -6,24 +6,16 @@ public class FloorZone : MonoBehaviour
 {
     public GameObject floorZone;
     public GameObject floor;
-    List<GameObject> villagers;
+    List<Vector3> positions;
     public int fruitCount = 0;
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.CompareTag("Fruit"))
-        {
-            fruitCount++;
-        }
-    }
+
     // Start is called before the first frame update
     void Start()
     {
+        positions = new List<Vector3>();
         float floorZoneX = floorZone.transform.localPosition.x;
         float floorZoneZ = floorZone.transform.localPosition.z;
-        villagers = new List<GameObject>();
-        //floorZone.transform = new Vector3(0.3F, 1F, 0.3F);
-        float spawnPointX =  0.5F ;
-        float spawnPointZ = 0.5F ;
+  
 
 
         int random = Random.Range(3, 6);
@@ -33,34 +25,56 @@ public class FloorZone : MonoBehaviour
             GameObject spawnPoint = new GameObject();
             spawnPoint.transform.position = floorZone.transform.position;
             spawnPoint.transform.parent = floorZone.transform;
-            spawnPoint.transform.localPosition = new Vector3(Random.Range(-spawnPointX , spawnPointX), 1F,  Random.Range(-spawnPointZ, spawnPointZ));
-            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);                 
-            villagers.Add(villager);
-                
-
-            
+            spawnPoint.transform.localPosition = GenerateCoordinates();
+            //spawnPoint.transform.localPosition = new Vector3(Random.Range(-spawnPointX , spawnPointX), 1F,  Random.Range(-spawnPointZ, spawnPointZ));
+            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);
+            CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
+            capsuleCollider.enabled = false;           
         }
     }
 
-        float[] GenerateCoordinates()
+    private void Update()
+    {
+        
+    }
+
+    public void PlaceFruit(List<int> fruitCollection)
+    {
+       foreach (int fruit in fruitCollection)
+       {
+           fruitCount += fruit;
+       }
+        Debug.Log("Floor holds: " + fruitCount + " pieces of fruit");
+    } 
+    Vector3 GenerateCoordinates()
         {
-            float[] coordinates = new float[2];
-            coordinates[0] =  Random.Range(-0.5F, 0.5F);
-            coordinates[1] =  Random.Range(-0.5F, 0.5F);          
-            return coordinates;
+        Vector3 coordinates = Vector3.zero;
+
+        if (positions.Count > 0)
+        {
+            coordinates.x = Random.Range(-0.5F, 0.5F);
+            coordinates.z = Random.Range(-0.5F, 0.5F);
+            foreach (Vector3 existingPosition in positions)
+            {
+                if(existingPosition.x - coordinates.x > 0.25F && existingPosition.z - coordinates.z > 0.25F)
+                {
+                    coordinates.x += 0.25F;
+                    coordinates.z += 0.25F;
+                }
+
+            }
+        }
+        else
+        {
+            coordinates.x = Random.Range(-0.5F, 0.5F);
+            coordinates.z = Random.Range(-0.5F, 0.5F);
+            positions.Add(coordinates);
+
+        }
+        coordinates.y = 1F;
+        return coordinates;
         }
 
-        public bool PositionIsAvailable(float x, float z, List<GameObject> villagers)
-        {
-            foreach (GameObject villager in villagers)
-            {
-                if (villager.transform.localPosition.x == x || villager.transform.localPosition.z == z)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
 
 
 }
