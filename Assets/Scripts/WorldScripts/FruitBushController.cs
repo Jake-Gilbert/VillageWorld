@@ -8,7 +8,7 @@ public class FruitBushController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        int index = 0;
 
         GameObject[] hectares = GameObject.FindGameObjectsWithTag("Hectare");
         int totalBushes = 0;
@@ -21,15 +21,17 @@ public class FruitBushController : MonoBehaviour
             while(bushesToSpawn > 0)     
             {
                 GameObject fruitBush = (GameObject)Instantiate(Resources.Load("FruitBush"), new Vector3(Random.Range(-120, 120), 1F, Random.Range(-120, 120)), Quaternion.identity);
+                fruitBush.name = "FruitBush" + (index + 1);
                 fruitBush.transform.parent = hect.transform;
                 fruitBush.transform.localPosition = new Vector3(Random.Range(-boundary, boundary), 0F, Random.Range(-boundary, boundary));
                 fruitBush.transform.parent = null;
                 MeshRenderer renderer = fruitBush.GetComponent<MeshRenderer>();
                 fruitBush.tag = "FruitBush";
                 FruitBush fruitBushScript = fruitBush.GetComponent(typeof(FruitBush)) as FruitBush;
-                fruitBushScript.bush = fruitBush.transform.GetChild(0).gameObject;
-                
+                fruitBushScript.bush = fruitBush.transform.GetChild(0).gameObject;             
                 bushesToSpawn--;
+                index++;
+               
                         
             }           
             Destroy(hect);            
