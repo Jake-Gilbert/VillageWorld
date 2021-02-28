@@ -7,7 +7,7 @@ public class FloorZone : MonoBehaviour
     public GameObject floorZone;
     public GameObject floor;
     List<Vector3> positions;
-    public int fruitCount = 0;
+    private int fruitCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -26,25 +26,25 @@ public class FloorZone : MonoBehaviour
             spawnPoint.transform.position = floorZone.transform.position;
             spawnPoint.transform.parent = floorZone.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
-            //spawnPoint.transform.localPosition = new Vector3(Random.Range(-spawnPointX , spawnPointX), 1F,  Random.Range(-spawnPointZ, spawnPointZ));
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;           
         }
     }
 
-    private void Update()
+    public int GetFruitCount()
     {
-        
+        return fruitCount;
     }
 
-    public void PlaceFruit(List<int> fruitCollection)
-    {
-       foreach (int fruit in fruitCollection)
-       {
-           fruitCount += fruit;
-       }
-        Debug.Log("Floor holds: " + fruitCount + " pieces of fruit");
+    public void PlaceFruit(int fruit)
+    {      
+       if(fruit > 0)
+        {
+            fruitCount += fruit;
+            Debug.Log("Floor holds: " + fruitCount + " pieces of fruit");
+        }
+
     } 
     Vector3 GenerateCoordinates()
         {

@@ -1,116 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2640577705869088448
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4891790145335552214}
-  - component: {fileID: 2731491381036852251}
-  - component: {fileID: 4255378236453732762}
-  - component: {fileID: 4622386368310046515}
-  - component: {fileID: 9058494156525138005}
-  m_Layer: 0
-  m_Name: detectionSphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4891790145335552214
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640577705869088448}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.24, y: 0.979, z: -0.09}
-  m_LocalScale: {x: 2.26, y: 2.19, z: 2.32}
-  m_Children: []
-  m_Father: {fileID: 3632947419589992692}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2731491381036852251
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640577705869088448}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4255378236453732762
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640577705869088448}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4622386368310046515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640577705869088448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9739d7bf7c175b458ae492367072f2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fruitCount: 0
-  nearestBush: {fileID: 0}
---- !u!136 &9058494156525138005
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2640577705869088448}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3601974661268261811
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,9 +89,8 @@ GameObject:
   - component: {fileID: 3632947419589992694}
   - component: {fileID: 3632947419589992695}
   - component: {fileID: 3632947419589992691}
-  - component: {fileID: 3463764223014634260}
   - component: {fileID: 8476257294336797969}
-  - component: {fileID: 547485298740602656}
+  - component: {fileID: 2727047617466103099}
   m_Layer: 0
   m_Name: agentVillager
   m_TagString: Untagged
@@ -221,7 +109,6 @@ Transform:
   m_LocalPosition: {x: 4.0666113, y: 0, z: -1.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4891790145335552214}
   - {fileID: 4120476756285152874}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -307,30 +194,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3463764223014634260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3632947419589992682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4be7f5552e4de4986cfe168f9d7d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floorZone: {fileID: 1429001605387876859, guid: b3c62ec23e97f6f41a3bc2d490f2dac0,
-    type: 3}
-  villager: {fileID: 0}
-  sightSphere: {fileID: 0}
-  closestBush: {fileID: 0}
-  energyBar: {fileID: 4882307380742879277}
-  fruitCollection: 
-  currentEnergy: 0
-  baseSpeed: 0
-  moveDirection: {x: 0, y: 0, z: 0}
-  motionless: 0
-  bushSeen: 0
 --- !u!114 &8476257294336797969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,8 +207,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nearestBush: {fileID: 0}
-  villager: {fileID: 3463764223014634260}
---- !u!114 &547485298740602656
+  villager: {fileID: 2727047617466103099}
+--- !u!114 &2727047617466103099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -354,11 +217,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 3632947419589992682}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9739d7bf7c175b458ae492367072f2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 96603009ccce02749bfa5153d2ee364a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruitCount: 0
-  nearestBush: {fileID: 0}
+  villager: {fileID: 0}
+  closestBush: {fileID: 0}
+  energyBar: {fileID: 4882307380742879277}
+  fruitCollection: 
+  currentEnergy: 0
+  baseSpeed: 0
+  moveDirection: {x: 0, y: 0, z: 0}
+  motionless: 0
+  bushSeen: 0
 --- !u!1 &4430044217859650133
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +336,7 @@ RectTransform:
   m_Children:
   - {fileID: 2087218350651452317}
   m_Father: {fileID: 3632947419589992692}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

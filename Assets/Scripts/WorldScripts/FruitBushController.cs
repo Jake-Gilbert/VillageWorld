@@ -26,9 +26,7 @@ public class FruitBushController : MonoBehaviour
                 fruitBush.transform.localPosition = new Vector3(Random.Range(-boundary, boundary), 0F, Random.Range(-boundary, boundary));
                 fruitBush.transform.parent = null;
                 MeshRenderer renderer = fruitBush.GetComponent<MeshRenderer>();
-                fruitBush.tag = "FruitBush";
-                FruitBush fruitBushScript = fruitBush.GetComponent(typeof(FruitBush)) as FruitBush;
-                fruitBushScript.bush = fruitBush.transform.GetChild(0).gameObject;             
+                fruitBush.tag = "FruitBush";           
                 bushesToSpawn--;
                 index++;
                
