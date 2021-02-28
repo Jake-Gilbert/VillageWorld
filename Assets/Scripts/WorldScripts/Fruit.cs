@@ -20,11 +20,7 @@ public class Fruit : MonoBehaviour
         isCarried = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    { 
-        
-    }
+ 
 
     void onTriggerEnter(Collider other)
     {

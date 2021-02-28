@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7205584159973819992}
   - component: {fileID: 1511525569397559758}
   - component: {fileID: 2323828548242423449}
+  - component: {fileID: 4083308524162595328}
   m_Layer: 0
   m_Name: Bush
   m_TagString: Bush
@@ -95,6 +96,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.50000006
   m_Center: {x: -0.00000023841858, y: -0.00000023841858, z: 0}
+--- !u!114 &4083308524162595328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3884452408968108969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bb96df0aa80a1741aab1fa8735823dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bush: {fileID: 3884452408968108969}
 --- !u!1 &4560874648508342564
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +121,6 @@ GameObject:
   - component: {fileID: 4560874648508342563}
   - component: {fileID: 4560874648508342562}
   - component: {fileID: 4560874648508342565}
-  - component: {fileID: 4560874648508342561}
   - component: {fileID: 5813581215579523264}
   m_Layer: 8
   m_Name: FruitBush
@@ -193,19 +206,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9999999, y: 5.5681667, z: 1}
   m_Center: {x: 0, y: 2.2840824, z: 0}
---- !u!114 &4560874648508342561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4560874648508342564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb96df0aa80a1741aab1fa8735823dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bush: {fileID: 0}
 --- !u!54 &5813581215579523264
 Rigidbody:
   m_ObjectHideFlags: 0
