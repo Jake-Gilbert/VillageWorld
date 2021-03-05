@@ -11,6 +11,7 @@ TagManager:
   - Hectare
   - Zone
   - Bush
+  - Villager
   layers:
   - Default
   - TransparentFX

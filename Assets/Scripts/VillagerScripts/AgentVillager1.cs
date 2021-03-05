@@ -4,18 +4,18 @@ using UnityEngine;
 using UnityEngine.AI;
 public class AgentVillager1 : MonoBehaviour
 {
-    private GameObject floorZone;
+    public NavMeshAgent agent;
+    public GameObject floor;
     public GameObject villager;
     public GameObject closestBush;
     public RectTransform energyBar;
-    public int currentHeldFruit;
-    private int totalFruitCollected;//TODO
+    public int currentHeldFruit; 
+    private int totalFruitCollected;
     public float currentEnergy;
     public float baseSpeed;
-    public Vector3 moveDirection;
+    public Vector3 randomPos;
     public bool motionless;
     public bool bushSeen;
-    private bool carryingFruit;
     private float switchDirectionCounter;
     private CharacterController character;
 
@@ -23,20 +23,19 @@ public class AgentVillager1 : MonoBehaviour
     {
         if (hit.gameObject.CompareTag("Boundary"))
         {
-            moveDirection *= -1;
+            agent.SetDestination(-hit.gameObject.transform.position);
         }
 
     }
     void Start()
     {
+        totalFruitCollected = 0;
         currentHeldFruit = 0;
         motionless = false;
         villager = gameObject;
         currentEnergy = 100F;
         character = GetComponent<CharacterController>();
         baseSpeed = 10F;
-        moveDirection = new Vector3(1, 0, 1);
-        moveDirection *= baseSpeed * Time.deltaTime;
         switchDirectionCounter = 0;
         ChangeDirection();
     }
@@ -44,12 +43,16 @@ public class AgentVillager1 : MonoBehaviour
 
     void ChangeDirection()
     {
-
-        moveDirection.z = (baseSpeed) * (Random.value > 0.5 ? 1 : -1);
-        moveDirection.x = (baseSpeed) * (Random.value > 0.5 ? 1 : -1);
-        moveDirection.y = 0;
-
-        moveDirection = transform.TransformDirection(moveDirection);
+        GameObject floor = GameObject.Find("Floor");
+        Vector3 randomPos = Vector3.zero;
+        float floorX = floor.transform.position.x;
+        float floorZ = floor.transform.position.z;
+        randomPos.x = Random.Range(-floorX, floorX);
+        randomPos.z = Random.Range(-floorZ, floorZ);
+        //randomPos = transform.TransformDirection(randomPos);
+        agent.SetDestination(randomPos);
+        switchDirectionCounter = 0;
+        RotateInForwardDirection();
     }
 
     void Update()
@@ -67,49 +70,42 @@ public class AgentVillager1 : MonoBehaviour
         {
             GameObject floorZone = FindObjectOfType<FloorZone>().gameObject;
             bool placed = false;
-
-             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, new Vector3(floorZone.transform.position.x, 1, floorZone.transform.position.z), Time.deltaTime * baseSpeed);
-            if (!placed && gameObject.transform.position.x == floorZone.transform.position.x && gameObject.transform.position.z == floorZone.transform.position.z)
+            RotateTowardsPosition(floorZone.transform);
+            agent.SetDestination(floorZone.transform.position);           
+            if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
             {
-                DelayMotion();
+                StartCoroutine(WaitSeconds(1));
                 FloorZone floor = FindObjectOfType<FloorZone>();
                 floor.PlaceFruit(currentHeldFruit);
-                currentHeldFruit = 0;
-                placed = true;
-            }
-            bushSeen = true;
+                totalFruitCollected = currentHeldFruit;
+                currentHeldFruit = 0;               
+                currentEnergy += 10;
+                placed = true;             
+            }           
             return;
         }
 
         if (bushSeen && closestBush != null)
         {
             bool fruitPicked = false;
-            while(Vector3.Distance(gameObject.transform.position, closestBush.transform.position) > 3)
+            agent.SetDestination(closestBush.transform.position);
+            RotateTowardsPosition(closestBush.transform);
+            if (!fruitPicked && Vector3.Distance(closestBush.transform.position, agent.transform.position) <= 3)
             {
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, closestBush.transform.position, Time.deltaTime * baseSpeed);
-            }
-
-            if (!fruitPicked)
-                {
-                StartCoroutine(DelayMotion());
-                FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;
-                closest.PickFruit();
-                currentHeldFruit++;
+                StartCoroutine(WaitSeconds(1));
+                FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;                
+                currentHeldFruit = closest.PickFruit(); 
                 fruitPicked = false;
             }
-            bushSeen = false;
             return;
         }
 
-        if (character != null)
+        if (agent != null)
         {
-            character.Move(moveDirection * Time.deltaTime);
-            if (switchDirectionCounter >= Random.Range(3, 8))
+            if (switchDirectionCounter >= (Random.Range(6, 8)))
             {
                 ChangeDirection();
-                switchDirectionCounter = 0;
             }
-
         }
 
       
@@ -117,17 +113,35 @@ public class AgentVillager1 : MonoBehaviour
 
     }
 
-    IEnumerator DelayMotion()
+
+    void RotateTowardsPosition(Transform target)
     {
-        baseSpeed = 0;
-        yield return new WaitForSeconds(3);
-        StartMotion();
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5F);
+
     }
 
-    void StartMotion()
+    void RotateInForwardDirection()
     {
-        baseSpeed = 10;       
+        Vector3 direction = transform.forward;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5F);
     }
+
+    IEnumerator WaitSeconds(int seconds)
+    {
+        agent.isStopped = true;      
+        yield return new WaitForSeconds(seconds);
+        agent.isStopped = false;
+    }
+
+    public int getFruitCollected()
+    {
+        return totalFruitCollected;
+    }
+  
+
 
 
 }
