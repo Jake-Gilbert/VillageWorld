@@ -109,4 +109,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorZone: {fileID: 0}
-  fruitCount: 0
+  floor: {fileID: 0}
+  amountOfAgents: 10

@@ -6,6 +6,7 @@ public class FloorZone : MonoBehaviour
 {
     public GameObject floorZone;
     public GameObject floor;
+    public int amountOfAgents;
     List<Vector3> positions;
     private int fruitCount = 0;
 
@@ -18,8 +19,8 @@ public class FloorZone : MonoBehaviour
   
 
 
-        int random = Random.Range(3, 6);
-        for (int i = 0; i < random; i++)
+     
+        for (int i = 0; i < amountOfAgents; i++)
         {
             
             GameObject spawnPoint = new GameObject();
@@ -27,6 +28,8 @@ public class FloorZone : MonoBehaviour
             spawnPoint.transform.parent = floorZone.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);
+            villager.name = "Villager" + (i + 1);
+            villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;           
         }

@@ -12,9 +12,9 @@ public class VillagerSight : MonoBehaviour
     {
       
         RaycastHit hit;             
-        Ray lineOfSight = new Ray(villager.transform.position, villager.moveDirection);
-        Debug.DrawRay(villager.transform.position, villager.moveDirection);
-        if (Physics.Raycast(lineOfSight, out hit, 5))
+        Ray lineOfSight = new Ray(villager.transform.position, villager.transform.forward);
+        Debug.DrawRay(villager.transform.position, villager.transform.forward);
+        if (Physics.Raycast(lineOfSight, out hit, 20))
         {
             if (hit.collider.CompareTag("Bush") && nearestBush == null) 
             {

@@ -12,7 +12,6 @@ public class FruitBushController : MonoBehaviour
 
         GameObject[] hectares = GameObject.FindGameObjectsWithTag("Hectare");
         int totalBushes = 0;
-
         foreach (GameObject hect in hectares)
         {          
             int bushesToSpawn = (int) (baseNoOfBushes * Random.value);
@@ -22,7 +21,7 @@ public class FruitBushController : MonoBehaviour
             {
                 GameObject fruitBush = (GameObject)Instantiate(Resources.Load("FruitBush"), new Vector3(Random.Range(-120, 120), 1F, Random.Range(-120, 120)), Quaternion.identity);
                 fruitBush.name = "FruitBush" + (index + 1);
-                fruitBush.transform.parent = hect.transform;
+                fruitBush.transform.parent = hect.transform;               
                 fruitBush.transform.localPosition = new Vector3(Random.Range(-boundary, boundary), 0F, Random.Range(-boundary, boundary));
                 fruitBush.transform.parent = null;
                 MeshRenderer renderer = fruitBush.GetComponent<MeshRenderer>();

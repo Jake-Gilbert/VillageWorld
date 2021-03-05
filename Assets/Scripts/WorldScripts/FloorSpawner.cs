@@ -9,12 +9,15 @@ public class FloorSpawner : MonoBehaviour
 
     public int numOfCols;
     public int numOfRows;
+
     // Start is called before the first frame update
     void Start()
     {
         GameObject floor = (GameObject)Instantiate(Resources.Load("Floor"), new Vector3(-sizeX/2, 0, -sizeX/2), Quaternion.identity);
+        UnityEditor.AI.NavMeshBuilder.BuildNavMesh();
         floor.GetComponent<Terrain>().terrainData.size = new Vector3(sizeX, 0, sizeZ); 
         floor.AddComponent<FloorInteractions>();
+        floor.name = "Floor";
         floor.tag = "Boundary";
 
         //Four boundary walls

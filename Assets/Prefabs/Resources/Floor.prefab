@@ -89,4 +89,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff41e10451ffdc547bf3190f3b98302f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseNoOfBushes: 5
+  baseNoOfBushes: 6
