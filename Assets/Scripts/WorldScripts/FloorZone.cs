@@ -45,7 +45,6 @@ public class FloorZone : MonoBehaviour
        if(fruit > 0)
         {
             fruitCount += fruit;
-            Debug.Log("Floor holds: " + fruitCount + " pieces of fruit");
         }
 
     } 

@@ -39,7 +39,11 @@ public class FruitCollected : MonoBehaviour
     int GetFruitCollected()
     {
         floorZone = GameObject.FindGameObjectWithTag("Zone");
-        int total = floorZone.GetComponent<FloorZone>().GetFruitCount();       
+        int total = 0;
+        if (floorZone != null)
+        {
+            total = floorZone.GetComponent<FloorZone>().GetFruitCount();
+        }
         return total;
     }
      

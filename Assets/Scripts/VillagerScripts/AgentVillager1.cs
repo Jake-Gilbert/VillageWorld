@@ -77,7 +77,6 @@ public class AgentVillager1 : MonoBehaviour
                 StartCoroutine(WaitSeconds(1));
                 FloorZone floor = FindObjectOfType<FloorZone>();
                 floor.PlaceFruit(currentHeldFruit);
-                totalFruitCollected = currentHeldFruit;
                 currentHeldFruit = 0;               
                 currentEnergy += 10;
                 placed = true;             
@@ -94,7 +93,8 @@ public class AgentVillager1 : MonoBehaviour
             {
                 StartCoroutine(WaitSeconds(1));
                 FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;                
-                currentHeldFruit = closest.PickFruit(); 
+                currentHeldFruit = closest.PickFruit();
+                totalFruitCollected += currentHeldFruit;
                 fruitPicked = false;
             }
             return;
