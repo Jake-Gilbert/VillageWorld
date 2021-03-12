@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class VillagerStats : MonoBehaviour
     private int averageCount = 0;
     private int leastCount = 0;
     private int mostCount = 0;
+    int least = int.MaxValue;
+    int most = int.MinValue;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,24 +46,18 @@ public class VillagerStats : MonoBehaviour
     int GetAverageFruit()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
-        int average = 0;       
-        List<int> villagerFruits = new List<int>();
-        foreach (GameObject villager in villagers)
+        if (villagers == null)
         {
-            villagerFruits.Add(villager.GetComponent<AgentVillager1>().getFruitCollected());
+            return 0;
         }
-        for (int i = 0; i < villagerFruits.Count; i++)
-        {
-            average += villagerFruits[i];
-        }
-        average = average / villagerFruits.Count;
-        return average;
+
+        return villagers.Sum(v => v.GetComponent<AgentVillager1>()?.getFruitCollected() ?? 0) / villagers.Length;
     }
 
     int GetLeastFruit()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
-        int least = int.MaxValue;
+
         foreach (GameObject villager in villagers)
         {
             int locallLeast = villager.GetComponent<AgentVillager1>().getFruitCollected();
@@ -74,7 +72,6 @@ public class VillagerStats : MonoBehaviour
     int GetMostFruit()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
-        int most = int.MinValue;
 
         foreach (GameObject villager in villagers)
         {
