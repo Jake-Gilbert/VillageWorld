@@ -33,10 +33,6 @@ public class FruitBushController : MonoBehaviour
             }           
             Destroy(hect);            
         }
-        Debug.Log(totalBushes);
-
-                    
-
 
     }
 
