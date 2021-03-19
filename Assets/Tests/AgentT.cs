@@ -4,22 +4,19 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class TestController 
+public class AgentT
 {
-    
     // A Test behaves as an ordinary method
     [Test]
-    public void TestControllerSimplePasses()
+    public void AgentTSimplePasses()
     {
-        
-        Assert.AreEqual("5", 5);      
         // Use the Assert class to test conditions
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
-    public IEnumerator TestControllerWithEnumeratorPasses()
+    public IEnumerator AgentTWithEnumeratorPasses()
     {
         // Use the Assert class to test conditions.
         // Use yield to skip a frame.
