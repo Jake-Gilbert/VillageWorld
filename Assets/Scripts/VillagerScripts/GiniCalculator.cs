@@ -23,24 +23,24 @@ public class GiniCalculator : MonoBehaviour
     {
         if (!firstRun)
         {
-            Debug.Log(CalculateGiniCoefficient());
+            Debug.Log(CalculateGiniCoefficient(GetVillagerScores()));
             firstRun = true;
         }
         timer += Time.deltaTime;
 
         if (timer >= 5)
         {
-            float gini = CalculateGiniCoefficient();
+            float[] scores = GetVillagerScores();
+            Debug.Log("scores " + string.Join(",", scores));
+            float gini = CalculateGiniCoefficient(scores);
             Debug.Log(gini);
             giniValues.Add(gini);
             timer = 0;
         }
     }
 
-    float CalculateGiniCoefficient()
+    public float CalculateGiniCoefficient(float[] scores)
     {
-        float[] scores = getVillagerScores();
-        Debug.Log("scores " + string.Join(",", scores));
         float giniValue = 0;
         for (int i = 0; i < scores.Length; i++)
         {
@@ -49,22 +49,20 @@ public class GiniCalculator : MonoBehaviour
         return 1 - giniValue;
     }
 
-    float[] CalculateThresholds(float[] percentiles)
+    public float[] CalculateThresholds(float[] percentiles, int fruitCount)
     {
         float[] thresholds = new float[percentiles.Length];
         int i = 0;
-        GameObject floorzone = GameObject.FindGameObjectWithTag("Zone");
         foreach (int percentile in percentiles)
         {
-
-            thresholds[i] = (int)System.Math.Round(percentiles[i] * floorzone.GetComponent<FloorZone>().GetFruitCount(), 1);
+            thresholds[i] = (float)System.Math.Round(percentiles[i] * fruitCount);
             i += 1;
         }
         return thresholds;
     }
-    float[] getVillagerScores()
+    float[] GetVillagerScores()
     {
-        floorZone = GameObject.FindGameObjectWithTag("Zone").GetComponent<FloorZone>();
+        int fruitCollected = FruitCollected();
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         if (villagerCount == 0)
         {
@@ -72,39 +70,37 @@ public class GiniCalculator : MonoBehaviour
         }
 
         float[] percentiles = new float[] { 0.1F, 0.2F, 0.3F, 0.4F };
-        float[] thresholds = CalculateThresholds(percentiles);
+        float[] thresholds = CalculateThresholds(percentiles, fruitCollected);
+        Debug.Log("Threshholds " + string.Join(",", thresholds));
         int[] proportionOfWealth = new int[4];
         int[] wealthPerCitizen = WealthPerVillager();
         Debug.Log("PER CITIZEN " + string.Join(",", wealthPerCitizen));
         float[] scores = new float[4];
         int[] populationDivide = CalculatePopulationDivide(thresholds, wealthPerCitizen);
-        if (floorZone.GetFruitCount() == 0)
+        if (fruitCollected == 0)
         {
             proportionOfWealth[0] = 1;
             float percentageOfPopulation = populationDivide[0] / villagers.Length;
-            scores[0] = proportionOfWealth[0] * (percentageOfPopulation + 2 * 0);         
+            scores[0] = proportionOfWealth[0] * (percentageOfPopulation + 2 * 0);
         }
         else
         {
-            proportionOfWealth = CalculateWealthDivide(thresholds, wealthPerCitizen);
+            proportionOfWealth = CalculateQuantityOfWealth(thresholds, wealthPerCitizen);
+            float[] percentageOfWealth = CalculateProportionOfWealth(proportionOfWealth, fruitCollected);
             Debug.Log("Proportion " + string.Join(",", proportionOfWealth));
             for (int i = 0; i < scores.Length; i++)
             {
                 float richer = CalculateFractionOfRicher(thresholds[i], wealthPerCitizen);
-                float percentageOfPopulation =  populationDivide[i] / villagerCount;
-                float percentageOfWealth = (float)System.Math.Round((float)proportionOfWealth[i] / (float)floorZone.GetFruitCount(), 2); ;
-                scores[i] = percentageOfWealth * (percentageOfPopulation + (2 * richer));
-                Debug.Log(percentageOfWealth + " " + percentageOfPopulation + " " + richer);
+                float percentageOfPopulation = populationDivide[i] / villagerCount;
+                scores[i] = (float)percentageOfWealth[i] * (percentageOfPopulation + (2 * richer));
+                scores[i] = (float) System.Math.Round( scores[i], 3);
             }
         }
-        //Debug.Log("pop " + string.Join(",", populationDivide));
-        Debug.Log("wealth " + string.Join(",", proportionOfWealth));
 
 
         return scores;
     }
 
-    //FOR TESTING
     public int[] CalculatePopulationDivide(float[] thresholds, int[] villagers)
     {
         int[] populationDivide = new int[4];
@@ -135,55 +131,74 @@ public class GiniCalculator : MonoBehaviour
         return populationDivide;
     }
 
-    int[] CalculateWealthDivide(float[] thresholds, int[] wealthPerVillager)
+    public float[] CalculateProportionOfWealth(int[] proportionOfWealth, int fruitCollected)
+    {
+        float[] wealthProportion = new float[4];
+        for (int i = 0; i < proportionOfWealth.Length; i++)
+        {
+            wealthProportion[i] = (float)proportionOfWealth[i] / fruitCollected;
+            wealthProportion[i] = (float) System.Math.Round(wealthProportion[i], 3);
+        }
+        Debug.Log("fruit collected " + fruitCollected);
+        Debug.Log("proportion of welath " + string.Join(",", wealthProportion));
+        return wealthProportion;
+    }
+    public int[] CalculateQuantityOfWealth(float[] thresholds, int[] wealthPerVillager)
     {
         int[] wealthPerGroup = new int[4];
-        List<int> excludedVillagers = new List<int>();
+        Dictionary<int, int> villagersAndWealth = new Dictionary<int, int>();
+        for (int i = 0; i < wealthPerVillager.Length; i++)
+        {
+            villagersAndWealth.Add(i, wealthPerVillager[i]);
+        }
         for (int i = 0; i < thresholds.Length; i++)
         {
-            if (wealthPerVillager.Length > 0)
+            for (int j = 0;  j < villagersAndWealth.Count; j++)
             {
-                foreach (int villager in wealthPerVillager)
+                if (villagersAndWealth[j] <= thresholds[i])
                 {
-                    if (villager <= thresholds[i])
-                    {
-                        if (!excludedVillagers.Contains(villager))
-                        {
-                            wealthPerGroup[i] += wealthPerVillager.Count(x => x == thresholds[i]);
-                            excludedVillagers.Add(villager);
-                        }
-                    }
-              
+                    wealthPerGroup[i] += villagersAndWealth[j];
+                    villagersAndWealth[j] = 0;
                 }
             }
         }
+        Debug.Log("wealth per group: " + string.Join(",", wealthPerGroup));
         return wealthPerGroup;
     }
 
-float CalculateFractionOfRicher(float percentile, int[] villagers)
-{
-    float fraction = 0;
-    foreach (int villager in villagers)
+    float CalculateFractionOfRicher(float percentile, int[] villagers)
     {
-        if (villager > percentile)
+        float fraction = 0;
+        foreach (int villager in villagers)
         {
-            fraction += 1;
+            if (villager > percentile)
+            {
+                fraction += 1;
+            }
         }
+        return fraction / villagers.Length;
     }
-    return fraction / villagers.Length;
-}
-
-int[] WealthPerVillager()
-{
-    GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
-    int[] fruitPerCitizen = new int[villagers.Length];
-    for (int i = 0; i < fruitPerCitizen.Length; i++)
+    int FruitCollected()
     {
-        fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillager1>().getFruitCollected();
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        int fruitCollected = 0;
+        for (int i = 0; i < villagers.Length; i++)
+        {
+            fruitCollected += villagers[i].GetComponent<AgentVillager1>().getFruitCollected();
+        }
+        return fruitCollected;
     }
-    System.Array.Sort(fruitPerCitizen);
-    return fruitPerCitizen;
-}
+    int[] WealthPerVillager()
+    {
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        int[] fruitPerCitizen = new int[villagers.Length];
+        for (int i = 0; i < fruitPerCitizen.Length; i++)
+        {
+            fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillager1>().getFruitCollected();
+        }
+        System.Array.Sort(fruitPerCitizen);
+        return fruitPerCitizen;
+    }
 
 
 
