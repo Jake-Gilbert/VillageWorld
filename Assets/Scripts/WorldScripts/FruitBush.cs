@@ -7,8 +7,7 @@ public class FruitBush : MonoBehaviour
     public GameObject bush;
     private SphereCollider collider;
     private int numberOfFruit;
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         collider = GetComponent<SphereCollider>();
         int noOfFruits = Random.Range(1, 6);

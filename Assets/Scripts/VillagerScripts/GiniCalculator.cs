@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -8,35 +9,52 @@ using UnityEngine;
 
 public class GiniCalculator : MonoBehaviour
 {
-    public TMP_Text fruitCollectedText;
-    public FloorZone floorZone;
-    public List<float> giniValues;
+    public GetVillagerStats getVillagerStats;
+    public List<string> giniValues;
     private int villagerCount = 0;
-    float timer = 0;
-    bool firstRun = false;
-    void Start()
+    private float timer = 0;
+    private bool firstRun = false;
+    private bool valid = true;
+    private void Start()
     {
-        giniValues = new List<float>();
+        giniValues = new List<string>();
     }
 
     private void Update()
     {
         if (!firstRun)
         {
+            getVillagerStats = FindObjectOfType<GetVillagerStats>();
             Debug.Log(CalculateGiniCoefficient(GetVillagerScores()));
             firstRun = true;
         }
         timer += Time.deltaTime;
-
-        if (timer >= 5)
+        if (!VillagersExist() || !BushesExist())
         {
-            float[] scores = GetVillagerScores();
-            Debug.Log("scores " + string.Join(",", scores));
-            float gini = CalculateGiniCoefficient(scores);
-            Debug.Log(gini);
-            giniValues.Add(gini);
-            timer = 0;
+            valid = false;            
         }
+        else
+        {
+            if (timer >= 5 && valid)
+            {
+                float[] scores = GetVillagerScores();
+                float gini = CalculateGiniCoefficient(scores);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(getVillagerStats.VillagersAlive().ToString());
+                sb.Append(",");
+                sb.Append(getVillagerStats.GetLeastFruit().ToString());
+                sb.Append(",");
+                sb.Append(getVillagerStats.GetMostFruit().ToString());
+                sb.Append(",");
+                sb.Append(getVillagerStats.GetAverageFruit().ToString());
+                sb.Append(",");
+                sb.Append(getVillagerStats.GetTotalFruitColllected());
+                sb.Append(",");
+                sb.Append(gini.ToString());
+                giniValues.Add(sb.ToString());
+                timer = 0;
+            }
+        }    
     }
 
     public float CalculateGiniCoefficient(float[] scores)
@@ -60,9 +78,20 @@ public class GiniCalculator : MonoBehaviour
         }
         return thresholds;
     }
-    float[] GetVillagerScores()
+
+    private bool VillagersExist()
     {
-        int fruitCollected = FruitCollected();
+        return GameObject.FindGameObjectsWithTag("Villager").Length > 0 ? true : false;
+    }
+
+    private bool BushesExist()
+    {
+        return GameObject.FindGameObjectsWithTag("Bush").Length > 0 ? true : false;
+    }
+
+    private float[] GetVillagerScores()
+    {
+        int fruitCollected = getVillagerStats.GetTotalFruitColllected();
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         if (villagerCount == 0)
         {
@@ -71,10 +100,8 @@ public class GiniCalculator : MonoBehaviour
 
         float[] percentiles = new float[] { 0.1F, 0.2F, 0.3F, 0.4F };
         float[] thresholds = CalculateThresholds(percentiles, fruitCollected);
-        Debug.Log("Threshholds " + string.Join(",", thresholds));
         int[] proportionOfWealth = new int[4];
         int[] wealthPerCitizen = WealthPerVillager();
-        Debug.Log("PER CITIZEN " + string.Join(",", wealthPerCitizen));
         float[] scores = new float[4];
         int[] populationDivide = CalculatePopulationDivide(thresholds, wealthPerCitizen);
         if (fruitCollected == 0)
@@ -92,12 +119,10 @@ public class GiniCalculator : MonoBehaviour
             {
                 float richer = CalculateFractionOfRicher(thresholds[i], wealthPerCitizen);
                 float percentageOfPopulation = populationDivide[i] / villagerCount;
-                scores[i] = (float)percentageOfWealth[i] * (percentageOfPopulation + (2 * richer));
+                scores[i] = percentageOfWealth[i] * (percentageOfPopulation + (2 * richer));
                 scores[i] = (float) System.Math.Round( scores[i], 3);
             }
         }
-
-
         return scores;
     }
 
@@ -166,7 +191,7 @@ public class GiniCalculator : MonoBehaviour
         return wealthPerGroup;
     }
 
-    float CalculateFractionOfRicher(float percentile, int[] villagers)
+    private float CalculateFractionOfRicher(float percentile, int[] villagers)
     {
         float fraction = 0;
         foreach (int villager in villagers)
@@ -178,54 +203,27 @@ public class GiniCalculator : MonoBehaviour
         }
         return fraction / villagers.Length;
     }
-    int FruitCollected()
+    private int FruitCollected()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         int fruitCollected = 0;
         for (int i = 0; i < villagers.Length; i++)
         {
-            fruitCollected += villagers[i].GetComponent<AgentVillager1>().getFruitCollected();
+            fruitCollected += villagers[i].GetComponent<AgentVillager1>().GetFruitCollected();
         }
         return fruitCollected;
     }
-    int[] WealthPerVillager()
+    private int[] WealthPerVillager()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         int[] fruitPerCitizen = new int[villagers.Length];
         for (int i = 0; i < fruitPerCitizen.Length; i++)
         {
-            fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillager1>().getFruitCollected();
+            fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillager1>().GetFruitCollected();
         }
         System.Array.Sort(fruitPerCitizen);
         return fruitPerCitizen;
     }
-
-
-
-    //int[] CalculatePercentiles(int amount, int num)
-    //{
-    //    List<int> selectedIndexes = new List<int>();
-    //    for (int i = 0; i < amount - 1; i++)
-    //    {
-    //        //Random randomIndex = new System.Random();
-    //        selectedIndexes.Add(Random.Range(0, num + 1));
-    //    }
-
-    //    selectedIndexes = selectedIndexes.OrderByDescending(x => x).ToList();
-
-    //    List<int> result = new List<int>();
-    //    int leftOperand = num;
-    //    for (int i = 0; i < selectedIndexes.Count(); i++)
-    //    {
-    //        result.Add(leftOperand - selectedIndexes[i]);
-    //        leftOperand = selectedIndexes[i];
-    //    }
-
-    //    result.Add(leftOperand);
-
-    //    return result.OrderBy(x => x).ToArray();
-    //}
-
 }
 
 
