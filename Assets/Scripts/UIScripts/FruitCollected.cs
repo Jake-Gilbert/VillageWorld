@@ -4,12 +4,12 @@ using TMPro;
 using UnityEngine;
 public class FruitCollected : MonoBehaviour
 {   
-    GameObject floorZone;
+    private GameObject floorZone;
     public TMP_Text fruitCollectedText;
     public int fruitCollected;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         fruitCollectedText = gameObject.GetComponent<TMP_Text>();
 
@@ -23,7 +23,7 @@ public class FruitCollected : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {  
             if (fruitCollectedText.text == "")
             {
@@ -36,7 +36,7 @@ public class FruitCollected : MonoBehaviour
             }     
     }
 
-    int GetFruitCollected()
+    private int GetFruitCollected()
     {
         floorZone = GameObject.FindGameObjectWithTag("Zone");
         int total = 0;

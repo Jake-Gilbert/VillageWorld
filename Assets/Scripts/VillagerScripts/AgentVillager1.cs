@@ -19,7 +19,7 @@ public class AgentVillager1 : MonoBehaviour
     private float switchDirectionCounter;
     private CharacterController character;
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.CompareTag("Boundary"))
         {
@@ -27,7 +27,7 @@ public class AgentVillager1 : MonoBehaviour
         }
 
     }
-    void Start()
+    private void Start()
     {
         totalFruitCollected = 0;
         currentHeldFruit = 0;
@@ -41,7 +41,7 @@ public class AgentVillager1 : MonoBehaviour
     }
 
 
-    void ChangeDirection()
+    private void ChangeDirection()
     {
         GameObject floor = GameObject.Find("Floor");
         Vector3 randomPos = Vector3.zero;
@@ -55,7 +55,7 @@ public class AgentVillager1 : MonoBehaviour
         RotateInForwardDirection();
     }
 
-    void Update()
+    private void Update()
     {
         switchDirectionCounter += Time.deltaTime;
         currentEnergy -= Time.deltaTime * 2;
@@ -71,12 +71,13 @@ public class AgentVillager1 : MonoBehaviour
             GameObject floorZone = FindObjectOfType<FloorZone>().gameObject;
             bool placed = false;
             RotateTowardsPosition(floorZone.transform);
-            agent.SetDestination(floorZone.transform.position);           
+            agent.SetDestination(floorZone.transform.position);
             if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
             {
                 StartCoroutine(WaitSeconds(1));
                 FloorZone floor = FindObjectOfType<FloorZone>();
                 floor.PlaceFruit(currentHeldFruit);
+                totalFruitCollected += currentHeldFruit;
                 currentHeldFruit = 0;               
                 currentEnergy += 10;
                 placed = true;             
@@ -94,7 +95,6 @@ public class AgentVillager1 : MonoBehaviour
                 StartCoroutine(WaitSeconds(1));
                 FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;                
                 currentHeldFruit = closest.PickFruit();
-                totalFruitCollected += currentHeldFruit;
                 fruitPicked = false;
             }
             return;
@@ -113,8 +113,7 @@ public class AgentVillager1 : MonoBehaviour
 
     }
 
-
-    void RotateTowardsPosition(Transform target)
+    private void RotateTowardsPosition(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -122,21 +121,21 @@ public class AgentVillager1 : MonoBehaviour
 
     }
 
-    void RotateInForwardDirection()
+    private void RotateInForwardDirection()
     {
         Vector3 direction = transform.forward;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5F);
     }
 
-    IEnumerator WaitSeconds(int seconds)
+    private IEnumerator WaitSeconds(int seconds)
     {
         agent.isStopped = true;      
         yield return new WaitForSeconds(seconds);
         agent.isStopped = false;
     }
 
-    public int getFruitCollected()
+    public int GetFruitCollected()
     {
         return totalFruitCollected;
     }

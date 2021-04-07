@@ -8,7 +8,7 @@ public class VillagerSight : MonoBehaviour
     public AgentVillager1 villager;
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
       
         RaycastHit hit;             

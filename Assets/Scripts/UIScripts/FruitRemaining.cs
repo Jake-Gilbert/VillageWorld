@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class FruitRemaining : MonoBehaviour
 {
-    GameObject[] fruitBushes;
+    private GameObject[] fruitBushes;
     public TMP_Text fruitRemainingText;
     public int fruitRemaining;
-    // Start is called before the first frame update
    
     void Start()
     {
@@ -35,7 +34,7 @@ public class FruitRemaining : MonoBehaviour
         }
     }
 
-    int GetTotalFruit()
+    private int GetTotalFruit()
     {
         fruitBushes = GameObject.FindGameObjectsWithTag("Bush");
 

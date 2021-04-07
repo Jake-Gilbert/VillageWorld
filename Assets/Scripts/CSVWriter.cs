@@ -1,45 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 public class CSVWriter : MonoBehaviour
 {
-    bool writtenToCsv = false;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private bool writtenToCsv = false;
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (NoFruitBushes() && !writtenToCsv)
+        if ((NoFruitBushes() || NoVillagers()) && !writtenToCsv)
         {
             SaveToFile();
             writtenToCsv = true;
-            
         }
     }
 
-    string ToCSV()
+    private string ToCSV()
     {
-        int population = GameObject.FindGameObjectsWithTag("Villager").Length;
+        int villagersAlive = GameObject.FindGameObjectsWithTag("Villager").Length;
         GiniCalculator giniCalculator = GameObject.Find("GiniCalculator").GetComponent<GiniCalculator>();
-        StringBuilder sb = new StringBuilder("Population,FruitCollected,Gini");
-        foreach (float giniCoefficient in giniCalculator.giniValues)
+        StringBuilder sb = new StringBuilder("VillagersAlive,MinFruitCollected,MaxFruitColllected,AvgFruitCollected,TotalFruitCollected,Gini");
+        foreach (string csvInfo in giniCalculator.giniValues)
         {
-            int fruitCollected = GameObject.FindGameObjectWithTag("Zone").GetComponent<FloorZone>().GetFruitCount();
-
-            sb.Append("\n").Append(population).Append(",").Append(fruitCollected).Append(",").Append(giniCoefficient);
+            string[] values = csvInfo.Split(',');
+            Debug.Log(string.Join(",",values));
+            sb.Append("\n").Append(values[0]).Append(",").Append(values[1]).Append(",").Append(values[2]).Append(",").Append(values[3]).Append(",").Append(values[4]).Append(",").Append(values[5]);
         }
         return sb.ToString();
     }
 
-    void SaveToFile()
+    private void SaveToFile()
     {
         string content = ToCSV();
         Debug.Log(content);
@@ -57,16 +52,15 @@ public class CSVWriter : MonoBehaviour
         AssetDatabase.Refresh();
     }
 
-    bool NoFruitBushes()
+    private bool NoFruitBushes()
     {
-        if (GameObject.FindGameObjectsWithTag("Bush").Length > 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
+        bool bushes = GameObject.FindGameObjectsWithTag("Bush").Length > 0 ? false : true;
+        return bushes;
+    }
 
-        }
+    private bool NoVillagers()
+    {
+        bool villagers = GameObject.FindGameObjectsWithTag("Villager").Length > 0 ? false : true;
+        return villagers;
     }
 }

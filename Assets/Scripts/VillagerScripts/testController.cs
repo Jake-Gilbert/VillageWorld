@@ -4,6 +4,7 @@ using UnityEngine;
  
 public class testController : MonoBehaviour
 {
+    //THIS CLASS WAS USED FOR OBSERVATION AND IS NOT PART OF THE RESEARCH
     private float speed = 75.0F;
     private Vector3 moveDirection = Vector3.zero;
     // Start is called before the first frame update

@@ -7,11 +7,11 @@ public class FloorZone : MonoBehaviour
     public GameObject floorZone;
     public GameObject floor;
     public int amountOfAgents;
-    List<Vector3> positions;
+    private List<Vector3> positions;
     private int fruitCount = 0;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         positions = new List<Vector3>();
         float floorZoneX = floorZone.transform.localPosition.x;
@@ -48,7 +48,7 @@ public class FloorZone : MonoBehaviour
         }
 
     } 
-    Vector3 GenerateCoordinates()
+    private Vector3 GenerateCoordinates()
         {
         Vector3 coordinates = Vector3.zero;
 

@@ -5,8 +5,7 @@ using UnityEngine;
 public class FruitBushController : MonoBehaviour
 {
     public int baseNoOfBushes;
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         int index = 0;
 
