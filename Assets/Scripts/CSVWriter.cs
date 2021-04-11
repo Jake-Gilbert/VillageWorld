@@ -54,13 +54,11 @@ public class CSVWriter : MonoBehaviour
 
     private bool NoFruitBushes()
     {
-        bool bushes = GameObject.FindGameObjectsWithTag("Bush").Length > 0 ? false : true;
-        return bushes;
+        return GameObject.FindGameObjectsWithTag("Bush").Length <= 0;
     }
 
     private bool NoVillagers()
     {
-        bool villagers = GameObject.FindGameObjectsWithTag("Villager").Length > 0 ? false : true;
-        return villagers;
+        return GameObject.FindGameObjectsWithTag("Villager").Length <= 0;
     }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6046926509079916450}
   - component: {fileID: 3696288040209330238}
   - component: {fileID: 5719290078625936582}
+  - component: {fileID: 8657666012809285522}
   m_Layer: 0
   m_Name: CollectionZone
   m_TagString: Untagged
@@ -103,11 +104,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429001605387876859}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e85969a88bfadc4f94a4d138024fa4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorZone: {fileID: 0}
   floor: {fileID: 0}
-  amountOfAgents: 10
+  amountOfAgents: 8
+--- !u!114 &8657666012809285522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429001605387876859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fbb31d557ca674d949c28772f0637b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floor: {fileID: 0}
+  amountOfAgents: 6

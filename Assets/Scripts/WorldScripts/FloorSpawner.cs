@@ -43,7 +43,6 @@ public class FloorSpawner : MonoBehaviour
         GameObject floorzone = (GameObject)Instantiate(Resources.Load("CollectionZone"), new Vector3(Random.Range(-floorX, -floorZ), 0F, Random.Range(-floorZ, floorZ)), Quaternion.identity);
         floorzone.tag = ("Zone");
         FloorZone floorzoneScript = floorzone.GetComponent(typeof(FloorZone)) as FloorZone;
-        floorzoneScript.floorZone = floorzone;
         floorzoneScript.floor = floor;
 
         float shapeSizeZ = sizeZ / numOfCols;
