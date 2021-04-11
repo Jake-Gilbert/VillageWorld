@@ -10,8 +10,7 @@ public class FruitRemaining : MonoBehaviour
     public int fruitRemaining;
    
     void Start()
-    {
-        
+    { 
         fruitRemainingText = gameObject.GetComponent<TMP_Text>();
         fruitRemaining = GetTotalFruit();
         if (fruitRemainingText != null)

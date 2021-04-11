@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 967949527731880537}
   - component: {fileID: 4136697017016137219}
   - component: {fileID: 1678192986010585211}
+  - component: {fileID: -7080302765068145203}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -84,9 +85,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2407793963772182428}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff41e10451ffdc547bf3190f3b98302f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseNoOfBushes: 6
+--- !u!114 &-7080302765068145203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2407793963772182428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1f4f7bd31157234d8e24841fd8b8bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   baseNoOfBushes: 6

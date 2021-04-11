@@ -48,7 +48,7 @@ public class GiniCalculator : MonoBehaviour
                 sb.Append(",");
                 sb.Append(getVillagerStats.GetAverageFruit().ToString());
                 sb.Append(",");
-                sb.Append(getVillagerStats.GetTotalFruitColllected());
+                sb.Append(getVillagerStats.GetTotalFruitCollected());
                 sb.Append(",");
                 sb.Append(gini.ToString());
                 giniValues.Add(sb.ToString());
@@ -91,7 +91,7 @@ public class GiniCalculator : MonoBehaviour
 
     private float[] GetVillagerScores()
     {
-        int fruitCollected = getVillagerStats.GetTotalFruitColllected();
+        int fruitCollected = getVillagerStats.GetTotalFruitCollected();
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         if (villagerCount == 0)
         {

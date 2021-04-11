@@ -10,14 +10,14 @@ public class AgentVillager1 : MonoBehaviour
     public GameObject closestBush;
     public RectTransform energyBar;
     public int currentHeldFruit; 
-    private int totalFruitCollected;
+    protected int totalFruitCollected;
     public float currentEnergy;
     public float baseSpeed;
     public Vector3 randomPos;
     public bool motionless;
     public bool bushSeen;
-    private float switchDirectionCounter;
-    private CharacterController character;
+    protected float switchDirectionCounter;
+    protected CharacterController character;
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -41,7 +41,7 @@ public class AgentVillager1 : MonoBehaviour
     }
 
 
-    private void ChangeDirection()
+    protected void ChangeDirection()
     {
         GameObject floor = GameObject.Find("Floor");
         Vector3 randomPos = Vector3.zero;
@@ -50,12 +50,12 @@ public class AgentVillager1 : MonoBehaviour
         randomPos.x = Random.Range(-floorX, floorX);
         randomPos.z = Random.Range(-floorZ, floorZ);
         //randomPos = transform.TransformDirection(randomPos);
-        agent.SetDestination(randomPos);
+        //agent.SetDestination(randomPos);
         switchDirectionCounter = 0;
         RotateInForwardDirection();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         switchDirectionCounter += Time.deltaTime;
         currentEnergy -= Time.deltaTime * 2;
@@ -121,7 +121,7 @@ public class AgentVillager1 : MonoBehaviour
 
     }
 
-    private void RotateInForwardDirection()
+    protected void RotateInForwardDirection()
     {
         Vector3 direction = transform.forward;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));

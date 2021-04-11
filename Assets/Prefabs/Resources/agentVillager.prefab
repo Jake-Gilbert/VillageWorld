@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 8476257294336797969}
   - component: {fileID: 2727047617466103099}
   - component: {fileID: 1285736570688549236}
+  - component: {fileID: 6760841388664249534}
   m_Layer: 0
   m_Name: agentVillager
   m_TagString: Untagged
@@ -216,7 +217,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3632947419589992682}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96603009ccce02749bfa5153d2ee364a, type: 3}
   m_Name: 
@@ -254,6 +255,32 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6760841388664249534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632947419589992682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bddbe2965c864d43bce649fd0eee05a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 1285736570688549236}
+  floor: {fileID: 0}
+  villager: {fileID: 3632947419589992682}
+  closestBush: {fileID: 0}
+  energyBar: {fileID: 4882307380742879277}
+  currentHeldFruit: 0
+  currentEnergy: 0
+  baseSpeed: 0
+  randomPos: {x: 0, y: 0, z: 0}
+  motionless: 0
+  bushSeen: 0
+  personality: 0
+  strengthTrait: 0
+  speedTrait: 0
 --- !u!1 &4430044217859650133
 GameObject:
   m_ObjectHideFlags: 0

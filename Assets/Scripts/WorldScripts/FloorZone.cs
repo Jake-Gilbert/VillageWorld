@@ -4,34 +4,29 @@ using UnityEngine;
 
 public class FloorZone : MonoBehaviour
 {
-    public GameObject floorZone;
     public GameObject floor;
     public int amountOfAgents;
-    private List<Vector3> positions;
+    protected List<Vector3> positions;
     private int fruitCount = 0;
 
     // Start is called before the first frame update
     private void Start()
     {
         positions = new List<Vector3>();
-        float floorZoneX = floorZone.transform.localPosition.x;
-        float floorZoneZ = floorZone.transform.localPosition.z;
-  
+        float floorZoneX = gameObject.transform.localPosition.x;
+        float floorZoneZ = gameObject.transform.localPosition.z;
 
-
-     
         for (int i = 0; i < amountOfAgents; i++)
         {
-            
             GameObject spawnPoint = new GameObject();
-            spawnPoint.transform.position = floorZone.transform.position;
-            spawnPoint.transform.parent = floorZone.transform;
+            spawnPoint.transform.position = gameObject.transform.position;
+            spawnPoint.transform.parent = gameObject.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
-            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"),spawnPoint.transform.position , Quaternion.identity);
+            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
             villager.name = "Villager" + (i + 1);
             villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
-            capsuleCollider.enabled = false;           
+            capsuleCollider.enabled = false;
         }
     }
 
@@ -41,15 +36,14 @@ public class FloorZone : MonoBehaviour
     }
 
     public void PlaceFruit(int fruit)
-    {      
-       if(fruit > 0)
+    {
+        if (fruit > 0)
         {
             fruitCount += fruit;
         }
-
-    } 
-    private Vector3 GenerateCoordinates()
-        {
+    }
+    protected Vector3 GenerateCoordinates()
+    {
         Vector3 coordinates = Vector3.zero;
 
         if (positions.Count > 0)
@@ -58,12 +52,11 @@ public class FloorZone : MonoBehaviour
             coordinates.z = Random.Range(-0.5F, 0.5F);
             foreach (Vector3 existingPosition in positions)
             {
-                if(existingPosition.x - coordinates.x > 0.25F && existingPosition.z - coordinates.z > 0.25F)
+                if (existingPosition.x - coordinates.x > 0.25F && existingPosition.z - coordinates.z > 0.25F)
                 {
                     coordinates.x += 0.25F;
                     coordinates.z += 0.25F;
                 }
-
             }
         }
         else
@@ -71,12 +64,9 @@ public class FloorZone : MonoBehaviour
             coordinates.x = Random.Range(-0.5F, 0.5F);
             coordinates.z = Random.Range(-0.5F, 0.5F);
             positions.Add(coordinates);
-
         }
         coordinates.y = 1F;
         return coordinates;
-        }
-
-
+    }
 
 }

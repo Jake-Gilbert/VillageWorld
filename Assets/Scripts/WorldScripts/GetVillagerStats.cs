@@ -6,13 +6,13 @@ using UnityEngine;
 public class GetVillagerStats : MonoBehaviour
 {
     // Start is called before the first frame update
-   
-   public int VillagersAlive()
+
+    public int VillagersAlive()
     {
         return GameObject.FindGameObjectsWithTag("Villager").Length;
     }
 
-    public int GetTotalFruitColllected()
+    public int GetTotalFruitCollected()
     {
         return FindObjectOfType<FloorZone>().GetFruitCount();
     }
@@ -44,6 +44,16 @@ public class GetVillagerStats : MonoBehaviour
         }
         return least;
     }
+    public bool NoFruitBushes()
+    {
+        return GameObject.FindGameObjectsWithTag("Bush").Length <= 0;
+    }
+
+    public bool NoVillagers()
+    {
+        return GameObject.FindGameObjectsWithTag("Villager").Length <= 0;
+    }
+
 
     public int GetMostFruit()
     {
