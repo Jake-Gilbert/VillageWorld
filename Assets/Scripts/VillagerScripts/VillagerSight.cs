@@ -7,10 +7,8 @@ public class VillagerSight : MonoBehaviour
     public GameObject nearestBush;
     public AgentVillager1 villager;
 
-    // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
-      
         RaycastHit hit;             
         Ray lineOfSight = new Ray(villager.transform.position, villager.transform.forward);
         Debug.DrawRay(villager.transform.position, villager.transform.forward);
@@ -21,8 +19,7 @@ public class VillagerSight : MonoBehaviour
                 GameObject nearestBush = hit.collider.gameObject;
                 villager.closestBush = nearestBush;
                 villager.bushSeen = true;
-                
-               
+
             }
         
         }
