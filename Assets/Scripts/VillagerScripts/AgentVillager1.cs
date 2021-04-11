@@ -49,8 +49,6 @@ public class AgentVillager1 : MonoBehaviour
         float floorZ = floor.transform.position.z;
         randomPos.x = Random.Range(-floorX, floorX);
         randomPos.z = Random.Range(-floorZ, floorZ);
-        //randomPos = transform.TransformDirection(randomPos);
-        //agent.SetDestination(randomPos);
         switchDirectionCounter = 0;
         RotateInForwardDirection();
     }
@@ -108,27 +106,23 @@ public class AgentVillager1 : MonoBehaviour
             }
         }
 
-      
-
-
     }
 
     private void RotateTowardsPosition(Transform target)
     {
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (target.position - transform.forward).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5F);
-
     }
 
-    protected void RotateInForwardDirection()
+    private void RotateInForwardDirection()
     {
         Vector3 direction = transform.forward;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5F);
     }
 
-    private IEnumerator WaitSeconds(int seconds)
+    protected IEnumerator WaitSeconds(int seconds)
     {
         agent.isStopped = true;      
         yield return new WaitForSeconds(seconds);

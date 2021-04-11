@@ -8,7 +8,9 @@ public class AgentVillagerAdvanced : AgentVillager1
     new GameObject floor;
     private float desireToShare;
     private float desireToReveal;
-    public Personality personality;
+    [SerializeField]
+    private int carryingCapacity;
+    public Personality personality;     
     public StrengthTrait strengthTrait;
     public SpeedTrait speedTrait;
 
@@ -27,7 +29,7 @@ public class AgentVillagerAdvanced : AgentVillager1
     {
         agent.SetDestination(randomPos);
         switchDirectionCounter = 0;
-        RotateInForwardDirection();
+        transform.LookAt(randomPos);
     }
 
     private void Start()
@@ -51,10 +53,13 @@ public class AgentVillagerAdvanced : AgentVillager1
         switch (strengthTrait)
         {
             case StrengthTrait.Strong:
+                carryingCapacity = Random.Range(6, 9);
                 break;
             case StrengthTrait.Regular:
+                carryingCapacity = Random.Range(3, 6);
                 break;
             case StrengthTrait.Weak:
+                carryingCapacity = Random.Range(0, 3);
                 break;
             default:
                 break;
@@ -63,10 +68,10 @@ public class AgentVillagerAdvanced : AgentVillager1
         switch (speedTrait)
         {
             case SpeedTrait.Fast:
-                baseSpeed = 10;
+                baseSpeed = 5;
                 break;
             case SpeedTrait.Regular:
-                baseSpeed = 5;
+                baseSpeed = 3;
                 break;
             case SpeedTrait.Slow:
                 baseSpeed = 1;
@@ -95,7 +100,45 @@ public class AgentVillagerAdvanced : AgentVillager1
     private void FixedUpdate()
     {
         switchDirectionCounter += Time.deltaTime;
+        if (currentEnergy <= 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        if (currentHeldFruit > 0)
+        {
+            //GameObject floorZone = FindObjectOfType<FloorZone>().gameObject;
+            //bool placed = false;
+            //RotateTowardsPosition(floorZone.transform);
+            //agent.SetDestination(floorZone.transform.position);
+            //if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
+            //{
+            //    StartCoroutine(WaitSeconds(1));
+            //    FloorZone floor = FindObjectOfType<FloorZone>();
+            //    floor.PlaceFruit(currentHeldFruit);
+            //    totalFruitCollected += currentHeldFruit;
+            //    currentHeldFruit = 0;
+            //    currentEnergy += 10;
+            //    placed = true;
+            //}
+            //return;
+        }
+
+        if (bushSeen && closestBush != null)
+        {
+            bool fruitPicked = false;
+            agent.SetDestination(closestBush.transform.position);
+            transform.LookAt(closestBush.transform);
+            if (!fruitPicked && Vector3.Distance(closestBush.transform.position, agent.transform.position) <= 3)
+            {
+                StartCoroutine(WaitSeconds(1));
+                FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;
+                currentHeldFruit = closest.PickFruit();
+                fruitPicked = false;
+            }
+            return;
+        }
         if (agent != null)
         {
             if (switchDirectionCounter >= Random.Range(6, 8) || agent.remainingDistance < 1)
@@ -106,8 +149,7 @@ public class AgentVillagerAdvanced : AgentVillager1
         }
 
     }
-
-
+ 
 
     public enum Personality 
     {

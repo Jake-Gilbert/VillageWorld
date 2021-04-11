@@ -31,17 +31,17 @@ public class GenerationBehaviours : MonoBehaviour
         return generation + 1;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!initialised) 
         {
             floorzone = FindObjectOfType<FloorZoneAdvanced>();
             controller = FindObjectOfType<FruitBushControllerAdvanced>();
-            villagerStats = FindObjectOfType<GetVillagerStats>();          
+            villagerStats = FindObjectOfType<GetVillagerStats>();
             floorzone.InitialSpawning();
             initialised = true;
         }
-        if (timer >= 15 || villagerStats.NoFruitBushes())
+        if (timer >= 15 || timer >= 1 && villagerStats.NoFruitBushes())
         {
             NewGeneration();
             timer = 0;
