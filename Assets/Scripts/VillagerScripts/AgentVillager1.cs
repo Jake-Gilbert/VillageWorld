@@ -124,6 +124,7 @@ public class AgentVillager1 : MonoBehaviour
 
     protected IEnumerator WaitSeconds(int seconds)
     {
+        agent.velocity = Vector3.zero;
         agent.isStopped = true;      
         yield return new WaitForSeconds(seconds);
         agent.isStopped = false;

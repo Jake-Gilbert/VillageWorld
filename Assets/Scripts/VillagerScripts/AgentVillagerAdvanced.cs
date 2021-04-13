@@ -8,6 +8,9 @@ public class AgentVillagerAdvanced : AgentVillager1
     new GameObject floor;
     private float desireToShare;
     private float desireToReveal;
+    private float age;
+    private float ageCounter;
+    private float energyLossRate;
     [SerializeField]
     private int carryingCapacity;
     public Personality personality;     
@@ -32,8 +35,28 @@ public class AgentVillagerAdvanced : AgentVillager1
         transform.LookAt(randomPos);
     }
 
+    private void CalculateEnergyLossRate()
+    {
+        if (currentHeldFruit > 0)
+        {
+            energyLossRate =  1;
+            return;
+        }
+        energyLossRate = 1;
+    }
+
+    private void ChanceOfDeath()
+    {
+        if (Random.value < age * 0.01)
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
-    {       
+    {
+        age = 0;
+        ageCounter = 0;
+        energyLossRate = 1;
         switch (personality)
         {
             case Personality.Selfish:
@@ -68,13 +91,13 @@ public class AgentVillagerAdvanced : AgentVillager1
         switch (speedTrait)
         {
             case SpeedTrait.Fast:
-                baseSpeed = 5;
+                baseSpeed = Random.Range(9, 12);
                 break;
             case SpeedTrait.Regular:
-                baseSpeed = 3;
+                baseSpeed = Random.Range(6, 9);
                 break;
             case SpeedTrait.Slow:
-                baseSpeed = 1;
+                baseSpeed = Random.Range(3, 6);
                 break;
             default:
                 break;
@@ -87,18 +110,22 @@ public class AgentVillagerAdvanced : AgentVillager1
         villager = gameObject;
         currentEnergy = 100F;
         character = GetComponent<CharacterController>();
-        baseSpeed = 5F;
         agent.acceleration = baseSpeed;
         Vector3 randomPosition = CalculateRandomPosition();
         ChangeDirection(randomPosition);
-
-        Debug.Log(personality.ToString());
-        Debug.Log(strengthTrait.ToString());
-        Debug.Log(speedTrait.ToString());
     }
 
     private void FixedUpdate()
     {
+        //ageCounter += Time.deltaTime;
+        //if (ageCounter % 1 == 0 )
+        //{
+        //    ChanceOfDeath();
+        //    age += ageCounter;
+        //}
+        //Debug.Log(age);
+        currentEnergy -= (Time.deltaTime * energyLossRate);
+        energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
         switchDirectionCounter += Time.deltaTime;
         if (currentEnergy <= 0)
         {
@@ -108,21 +135,20 @@ public class AgentVillagerAdvanced : AgentVillager1
 
         if (currentHeldFruit > 0)
         {
-            //GameObject floorZone = FindObjectOfType<FloorZone>().gameObject;
-            //bool placed = false;
-            //RotateTowardsPosition(floorZone.transform);
-            //agent.SetDestination(floorZone.transform.position);
-            //if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
-            //{
-            //    StartCoroutine(WaitSeconds(1));
-            //    FloorZone floor = FindObjectOfType<FloorZone>();
-            //    floor.PlaceFruit(currentHeldFruit);
-            //    totalFruitCollected += currentHeldFruit;
-            //    currentHeldFruit = 0;
-            //    currentEnergy += 10;
-            //    placed = true;
-            //}
-            //return;
+            GameObject floorZone = FindObjectOfType<FloorZoneAdvanced>().gameObject;
+            bool placed = false;
+            agent.SetDestination(floorZone.transform.position);
+            if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
+            {
+                StartCoroutine(WaitSeconds(1));
+                FloorZoneAdvanced floor = FindObjectOfType<FloorZoneAdvanced>();
+                floor.PlaceFruit(currentHeldFruit, gameObject.GetComponent<AgentVillagerAdvanced>());
+                totalFruitCollected += currentHeldFruit;
+                currentEnergy += currentHeldFruit * 10;
+                currentHeldFruit = 0;
+                placed = true;
+            }
+            return;
         }
 
         if (bushSeen && closestBush != null)
@@ -134,8 +160,12 @@ public class AgentVillagerAdvanced : AgentVillager1
             {
                 StartCoroutine(WaitSeconds(1));
                 FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;
-                currentHeldFruit = closest.PickFruit();
+                currentHeldFruit = closest.PickFruit(carryingCapacity, currentHeldFruit);
                 fruitPicked = false;
+                if (closest.GetTotalFruit() <= 0)
+                {
+                    closestBush = null;
+                }
             }
             return;
         }

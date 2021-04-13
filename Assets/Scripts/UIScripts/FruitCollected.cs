@@ -42,7 +42,7 @@ public class FruitCollected : MonoBehaviour
         int total = 0;
         if (floorZone != null)
         {
-            total = floorZone.GetComponent<FloorZone>().GetFruitCount();
+            total = floorZone.GetComponent<FloorZoneAdvanced>().GetFruitCount();
         }
         return total;
     }

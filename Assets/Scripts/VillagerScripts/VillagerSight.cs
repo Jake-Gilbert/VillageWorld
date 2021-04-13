@@ -5,7 +5,8 @@ using UnityEngine;
 public class VillagerSight : MonoBehaviour
 {
     public GameObject nearestBush;
-    public AgentVillager1 villager;
+    public AgentVillagerAdvanced villager;
+
 
     private void FixedUpdate()
     {
@@ -16,12 +17,13 @@ public class VillagerSight : MonoBehaviour
         {
             if (hit.collider.CompareTag("Bush") && nearestBush == null) 
             {
-                GameObject nearestBush = hit.collider.gameObject;
-                villager.closestBush = nearestBush;
+                villager.closestBush = hit.collider.gameObject;
                 villager.bushSeen = true;
-
+                nearestBush = null;
             }
         
         }
     }
+    
+
 }

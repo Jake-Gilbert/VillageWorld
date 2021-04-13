@@ -28,10 +28,9 @@ public class FruitBush : MonoBehaviour
     {
         return numberOfFruit;
     }
-
     public int PickFruit()
     {
-        if(numberOfFruit > 0)
+        if (numberOfFruit > 0)
         {
             int amountOfFruitTaken = Random.Range(1, numberOfFruit);
             int returnAmount = amountOfFruitTaken;
@@ -45,7 +44,34 @@ public class FruitBush : MonoBehaviour
                 }
             }
 
-            return returnAmount;           
+            return returnAmount;
+        }
+        return 0;
+    }
+
+    public int PickFruit(int carryingCapacity, int heldFruit)
+    {
+        int fruitToPick = 0;
+        if(numberOfFruit > 0)
+        {
+            if (numberOfFruit < carryingCapacity - heldFruit)
+            {
+                fruitToPick = numberOfFruit;
+            }
+            else
+            {
+                fruitToPick = carryingCapacity - heldFruit;
+            }
+            for (int i = 0; i < fruitToPick; i++)
+            {
+                GameObject fruit = gameObject.transform.GetChild(i).gameObject;
+                if (fruit != null)
+                {
+                    numberOfFruit--;
+                    Destroy(fruit);
+                }
+            }
+           return fruitToPick;           
         }
         return 0;
     }
@@ -53,7 +79,7 @@ public class FruitBush : MonoBehaviour
     {
         if(numberOfFruit <= 0)
         {
-            Destroy(bush);
+            gameObject.SetActive(false);
         }
       
     }
