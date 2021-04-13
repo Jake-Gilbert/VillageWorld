@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nearestBush: {fileID: 0}
-  villager: {fileID: 2727047617466103099}
+  villager: {fileID: 6760841388664249534}
 --- !u!114 &2727047617466103099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3632947419589992682}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96603009ccce02749bfa5153d2ee364a, type: 3}
   m_Name: 
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3632947419589992682}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bddbe2965c864d43bce649fd0eee05a, type: 3}
   m_Name: 
@@ -278,6 +278,7 @@ MonoBehaviour:
   randomPos: {x: 0, y: 0, z: 0}
   motionless: 0
   bushSeen: 0
+  carryingCapacity: 0
   personality: 0
   strengthTrait: 0
   speedTrait: 0

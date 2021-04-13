@@ -61,8 +61,6 @@ public class FloorSpawner : MonoBehaviour
                 hectare.GetComponent<MeshRenderer>().enabled = false;
                 hectare.transform.position = new Vector3(hectareX, 0, hectareZ);
                 hectare.transform.localScale = new Vector3(shapeSizeX, 1, shapeSizeZ);
-
-
                 hectareZ -= shapeSizeZ;
             }
             hectareX -= shapeSizeX;

@@ -9,12 +9,29 @@ public class FloorZoneAdvanced : FloorZone
     int livingVillagersCount;
     static int villagerIndex;
     private new List<Vector3> positions;
+    private SortedList<Personality, int> dominantPersonality;
+    private SortedList<StrengthTrait, int> dominantStrength;
+    private SortedList<SpeedTrait, int> dominantSpeed;
     int totalFruitCount;
     int currentFruitSupply;
     private void Awake()
     {
         villagerIndex = 0;
         positions = new List<Vector3>();
+        dominantPersonality = new SortedList<Personality, int>();
+        dominantPersonality.Add(Personality.Empathetic, 0);
+        dominantPersonality.Add(Personality.Neutral, 0);
+        dominantPersonality.Add(Personality.Selfish, 0);
+
+        dominantStrength = new SortedList<StrengthTrait, int>();
+        dominantStrength.Add(StrengthTrait.Strong, 0);
+        dominantStrength.Add(StrengthTrait.Regular, 0);
+        dominantStrength.Add(StrengthTrait.Weak, 0);
+
+        dominantSpeed = new SortedList<SpeedTrait, int>();
+        dominantSpeed.Add(SpeedTrait.Fast, 0);
+        dominantSpeed.Add(SpeedTrait.Regular, 0);
+        dominantSpeed.Add(SpeedTrait.Slow, 0);
     }
 
     private void Start()
@@ -29,9 +46,13 @@ public class FloorZoneAdvanced : FloorZone
     private T GetRandomEnum<T>()
     {
         IList<T> enumList = System.Enum.GetValues(typeof(T)).Cast<T>().ToList();
-        return enumList[Random.Range(0, enumList.Count() - 1)];
+        return enumList[Random.Range(0, enumList.Count())];
     }
-    
+    public new int GetFruitCount()
+    {
+        return totalFruitCount;
+    }
+
     private void GenerateInitialAgents(int villagersToSpawn)
     {
         for (int i = 0; i < villagersToSpawn; i++)
@@ -49,15 +70,45 @@ public class FloorZoneAdvanced : FloorZone
             villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;
+            livingVillagersCount++;
             villagerIndex++;
         }
     }
-
-    private void ProduceNewGeneration(int amountOfAgents)
+    public void PlaceFruit(int fruit, AgentVillagerAdvanced agent)
     {
-       
+        if (fruit > 0)
+        {
+            totalFruitCount += fruit;
+            dominantPersonality[agent.personality] += 1;
+            dominantSpeed[agent.speedTrait] += 1;
+            dominantStrength[agent.strengthTrait] += 1;
+            return;
+        }
     }
 
+    private void ProduceNewGeneration(int newVillagerAmount)
+    {
+        //TODO CHANGE COLOUR
+        for (int i = 0; i < newVillagerAmount; i++)
+        {
+            GameObject spawnPoint = new GameObject();
+            spawnPoint.transform.position = gameObject.transform.position;
+            spawnPoint.transform.parent = gameObject.transform;
+            spawnPoint.transform.localPosition = GenerateCoordinates();
+            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
+            villager.GetComponent<AgentVillagerAdvanced>().personality = GetDominantPersonality();
+            villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetDominantStrengthTrait();
+            villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetDominantSpeedTrait();
+            villager.GetComponent<AgentVillagerAdvanced>().floor = floor;            
+            villager.name = "Villager" + (villagerIndex + 1);
+            villager.tag = "Villager";
+            CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
+            capsuleCollider.enabled = false;
+            livingVillagersCount++;
+            villagerIndex++;
+        }
+    }
+  
     public void Reproduce()
     {
         if (livingVillagersCount < 0)
@@ -66,11 +117,46 @@ public class FloorZoneAdvanced : FloorZone
         }
         else
         {
-            //int newVillagerAmount = GetFruitCount() / villagerCount;
-            int newVillagerAmount = 5;
-            //ProduceNewGeneration(newVillagerAmount);
+            if (GetFruitCount() < 0)
+            {
+                Debug.Log("Population can't grow");
+                return;
+            }
+            int newVillagerAmount = GetFruitCount() / livingVillagersCount;
+            Debug.Log(string.Join(",", dominantStrength.Values));
+            Debug.Log(string.Join(",", dominantPersonality.Values));
+            Debug.Log(string.Join(",", dominantSpeed.Values));
+            ProduceNewGeneration(newVillagerAmount);
+            Debug.Log("alive: " + livingVillagersCount);
         }
     }
+
+    public Personality GetDominantPersonality()
+    {
+        Debug.Log(string.Join(",", dominantPersonality));
+        Debug.Log(dominantPersonality.Keys.Count);
+        int max = dominantPersonality.Values.Max();
+        List<Personality> maxValuesIndexes = dominantPersonality.Keys.Where(k => dominantPersonality[k] == max).ToList();
+        return (maxValuesIndexes.Count > 1) ? maxValuesIndexes[Random.Range(0, maxValuesIndexes.Count)] : maxValuesIndexes[0];
+    }
+
+    public StrengthTrait GetDominantStrengthTrait()
+    {
+        Debug.Log(string.Join(",", dominantStrength));
+        Debug.Log(dominantStrength.Keys.Count);
+        int max = dominantStrength.Values.Max();
+        List<StrengthTrait> maxValuesIndexes = dominantStrength.Keys.Where(k => dominantStrength[k] == max).ToList();
+        return dominantStrength.Keys[dominantStrength.IndexOfValue(dominantStrength.Values.Max())];
+    }
+
+    public SpeedTrait GetDominantSpeedTrait()
+    {
+        Debug.Log(string.Join(",", dominantSpeed));
+        int max = dominantSpeed.Values.Max();
+        List<SpeedTrait> maxValuesIndexes = dominantSpeed.Keys.Where(k => dominantSpeed[k] == max).ToList();
+        return dominantSpeed.Keys[dominantSpeed.IndexOfValue(dominantSpeed.Values.Max())];
+    }
+
     private new Vector3 GenerateCoordinates()
     {
         Vector3 coordinates = Vector3.zero;

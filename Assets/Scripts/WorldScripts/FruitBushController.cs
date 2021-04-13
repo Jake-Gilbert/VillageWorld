@@ -26,11 +26,8 @@ public class FruitBushController : MonoBehaviour
                 MeshRenderer renderer = fruitBush.GetComponent<MeshRenderer>();
                 fruitBush.tag = "FruitBush";           
                 bushesToSpawn--;
-                index++;
-               
-                        
+                index++;                      
             }           
-            Destroy(hect);            
         }
 
     }

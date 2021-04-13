@@ -40,8 +40,11 @@ public class GenerationBehaviours : MonoBehaviour
             villagerStats = FindObjectOfType<GetVillagerStats>();
             floorzone.InitialSpawning();
             initialised = true;
+            Debug.Log(floorzone.GetDominantPersonality().ToString());
+            Debug.Log(floorzone.GetDominantStrengthTrait().ToString());
+            Debug.Log(floorzone.GetDominantSpeedTrait().ToString());
         }
-        if (timer >= 15 || timer >= 1 && villagerStats.NoFruitBushes())
+        if (timer >= 90 || timer >= 1 && villagerStats.NoFruitBushes())
         {
             NewGeneration();
             timer = 0;
