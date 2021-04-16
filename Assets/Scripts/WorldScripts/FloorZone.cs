@@ -9,7 +9,6 @@ public class FloorZone : MonoBehaviour
     protected List<Vector3> positions;
     private int fruitCount = 0;
 
-    // Start is called before the first frame update
     private void Start()
     {
         positions = new List<Vector3>();

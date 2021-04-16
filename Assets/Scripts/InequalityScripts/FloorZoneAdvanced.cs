@@ -6,6 +6,8 @@ using static AgentVillagerAdvanced;
 
 public class FloorZoneAdvanced : FloorZone
 {
+    [SerializeField]
+    private ReproductionWithBias reproductionWithBias;
     int livingVillagersCount;
     static int villagerIndex;
     private new List<Vector3> positions;
@@ -19,9 +21,9 @@ public class FloorZoneAdvanced : FloorZone
         villagerIndex = 0;
         positions = new List<Vector3>();
         dominantPersonality = new SortedList<Personality, int>();
-        dominantPersonality.Add(Personality.Empathetic, 0);
-        dominantPersonality.Add(Personality.Neutral, 0);
         dominantPersonality.Add(Personality.Selfish, 0);
+        dominantPersonality.Add(Personality.Neutral, 0);      
+        dominantPersonality.Add(Personality.Empathetic, 0);
 
         dominantStrength = new SortedList<StrengthTrait, int>();
         dominantStrength.Add(StrengthTrait.Strong, 0);
@@ -82,31 +84,26 @@ public class FloorZoneAdvanced : FloorZone
             dominantPersonality[agent.personality] += 1;
             dominantSpeed[agent.speedTrait] += 1;
             dominantStrength[agent.strengthTrait] += 1;
-            return;
         }
     }
 
-    private void ProduceNewGeneration(int newVillagerAmount)
+    public void SpawnInVillagers()
     {
-        //TODO CHANGE COLOUR
-        for (int i = 0; i < newVillagerAmount; i++)
-        {
-            GameObject spawnPoint = new GameObject();
-            spawnPoint.transform.position = gameObject.transform.position;
-            spawnPoint.transform.parent = gameObject.transform;
-            spawnPoint.transform.localPosition = GenerateCoordinates();
-            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
-            villager.GetComponent<AgentVillagerAdvanced>().personality = GetDominantPersonality();
-            villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetDominantStrengthTrait();
-            villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetDominantSpeedTrait();
-            villager.GetComponent<AgentVillagerAdvanced>().floor = floor;            
-            villager.name = "Villager" + (villagerIndex + 1);
-            villager.tag = "Villager";
-            CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
-            capsuleCollider.enabled = false;
-            livingVillagersCount++;
-            villagerIndex++;
-        }
+        GameObject spawnPoint = new GameObject();
+        spawnPoint.transform.position = gameObject.transform.position;
+        spawnPoint.transform.parent = gameObject.transform;
+        spawnPoint.transform.localPosition = GenerateCoordinates();
+        GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
+        villager.GetComponent<AgentVillagerAdvanced>().personality = GetDominantPersonality();
+        villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetDominantStrengthTrait();
+        villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetDominantSpeedTrait();
+        villager.GetComponent<AgentVillagerAdvanced>().floor = floor;
+        villager.name = "Villager" + (villagerIndex + 1);
+        villager.tag = "Villager";
+        CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
+        capsuleCollider.enabled = false;
+        livingVillagersCount++;
+        villagerIndex++;
     }
   
     public void Reproduce()
@@ -123,10 +120,8 @@ public class FloorZoneAdvanced : FloorZone
                 return;
             }
             int newVillagerAmount = GetFruitCount() / livingVillagersCount;
-            Debug.Log(string.Join(",", dominantStrength.Values));
-            Debug.Log(string.Join(",", dominantPersonality.Values));
-            Debug.Log(string.Join(",", dominantSpeed.Values));
-            ProduceNewGeneration(newVillagerAmount);
+            reproductionWithBias.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
+            //ProduceNewGeneration(newVillagerAmount);
             Debug.Log("alive: " + livingVillagersCount);
         }
     }
