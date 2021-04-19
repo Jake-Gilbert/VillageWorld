@@ -44,7 +44,7 @@ public class GenerationBehaviours : MonoBehaviour
             Debug.Log(floorzone.GetDominantStrengthTrait().ToString());
             Debug.Log(floorzone.GetDominantSpeedTrait().ToString());
         }
-        if (timer >= 90 || timer >= 1 && villagerStats.NoFruitBushes())
+        if (timer >= 60 || timer >= 1 && villagerStats.NoFruitBushes())
         {
             NewGeneration();
             timer = 0;
