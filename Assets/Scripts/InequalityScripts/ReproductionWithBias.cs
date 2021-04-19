@@ -7,76 +7,88 @@ public class ReproductionWithBias : MonoBehaviour
     private SortedList<AgentVillagerAdvanced.Personality, int> personalitiesToBeDistributed;
     private SortedList<AgentVillagerAdvanced.SpeedTrait, int> speedTraitsToBeDistributed;
     private SortedList<AgentVillagerAdvanced.StrengthTrait, int> strengthTraitsToBeDistributed;
-    private int villagersToBeSpawned = 0;
 
-    private T RouletteSelection<T>(KeyValuePair<T, float> lowerBound, KeyValuePair<T, float> upperBound)
+    public KeyValuePair<T, float> CalculateUpperBound<T>(SortedList<T, int> listOfTraits)
+    {
+        int maxValue = listOfTraits.Values.Max();
+        int total = listOfTraits.Values.Sum();
+        return new KeyValuePair<T, float>(listOfTraits.Keys.ToList()[listOfTraits.IndexOfValue(maxValue)], (float)  maxValue / total);
+    }
+
+    public KeyValuePair<T, float> CalculateLowerBound<T>(SortedList<T, int> listOfTraits)
+    {
+        int minValue = listOfTraits.Values.Min();
+        int total = listOfTraits.Values.Sum();
+        return new KeyValuePair<T, float>(listOfTraits.Keys.ToList()[listOfTraits.IndexOfValue(minValue)], (float) minValue / total);
+    }
+
+    public SortedList<AgentVillagerAdvanced.Personality, int> getPersonalityDistribution()
+    {
+        return personalitiesToBeDistributed;
+    }
+
+    public SortedList<AgentVillagerAdvanced.SpeedTrait, int> getSpeedtDistribution()
+    {
+        return speedTraitsToBeDistributed;
+    }
+
+    public SortedList<AgentVillagerAdvanced.StrengthTrait, int> getStrengthDistribution()
+    {
+        return strengthTraitsToBeDistributed;
+    }
+
+
+    private T RouletteSelection< T>(KeyValuePair<T, float> lowerBound, KeyValuePair<T, float> middleBound, KeyValuePair<T, float> upperBound)
     {
         float value = Random.value;
         if (value <= lowerBound.Value)
         {
             return lowerBound.Key;
         }
-        //else if (value <= upperBound.Value)
-        //{
-        //    return upperBound.Key;
-        //}
+        else if (value <= middleBound.Value)
+        {
+            return middleBound.Key;
+        }
         return upperBound.Key;
     }
 
-    private T RouletteSelection2<T>(List<T> bounds)
-    {
-        float value = Random.value;
-        if (value <= 0.1)
-        {
-            return bounds[0];
-        }
-        else if (value <= 0.3)
-        {
-            return bounds[1];
-        }
-        return bounds[2];
-    }
-
-
     private SortedList<T, int> TraitDistribution<T>(int numberOfVillagers, SortedList<T, int> traits)
     {
-        SortedList<T, int> traitDistribution = new SortedList<T, int>();
-        List<T> bounds = traits.Keys.ToList();
+        SortedList<T, int> traitDistribution = new SortedList<T, int>();       
         int total = traits.Values.Sum();
-        RouletteSelection(traits.Values.Min() / total  , traits.Values.Max() / total);
 
-   
-        //System.Enum.GetValues(typeof(T)).Cast<T>().ToList();
-        foreach (T  trait in traits.Keys)
-        {
+        KeyValuePair<T, float> lowerBoundPair = CalculateLowerBound(traits);
+        KeyValuePair<T, float> upperBoundPair = CalculateUpperBound(traits);
 
-        }
-        
-        //initalise list
-        foreach (T item in bounds)
-        {
-            traitDistribution.Add(item, 0);
-        }
+        List<T> upperAndLower = new List<T>();
+        upperAndLower.Add(upperBoundPair.Key);
+        upperAndLower.Add(lowerBoundPair.Key);
 
-        //distribute
-        for (int i = 0; i < numberOfVillagers; i++)
+        T middleBoundKey = traits.Keys.Where(x => !upperAndLower.Contains(x)).LastOrDefault();
+        KeyValuePair<T, float> middleBoundPair = new KeyValuePair<T, float>(middleBoundKey, traits[middleBoundKey] / total);
+        int villagersToSpawn = numberOfVillagers;
+        while (villagersToSpawn > 0)
         {
-            traitDistribution[RouletteSelection2<T>(bounds)]++;
+            T traitToAdd = RouletteSelection(lowerBoundPair, middleBoundPair, upperBoundPair);
+            if (!traitDistribution.Keys.Contains(traitToAdd))
+            {
+                traitDistribution.Add(traitToAdd, 1);
+            }
+            else
+            {
+                traitDistribution[traitToAdd] += 1;
+            }
+            villagersToSpawn--;
         }
         return traitDistribution;
     }
 
     //Calculates either personality, strength or speed trait of the population
     public void ProduceNewGeneration(int newVillagerAmount, SortedList<AgentVillagerAdvanced.Personality, int> p, SortedList<AgentVillagerAdvanced.SpeedTrait, int> sp, SortedList<AgentVillagerAdvanced.StrengthTrait, int> str)
-    {//[selfish, 7], [neutral, 3];
-        //TODO MNAYTBE CHANCE COLOUR
+    {
         int newVillagerTemp = newVillagerAmount;
-        personalitiesToBeDistributed = TraitDistribution<AgentVillagerAdvanced.Personality>(5, p);
-        speedTraitsToBeDistributed = new SortedList<AgentVillagerAdvanced.SpeedTrait, int>();
-        strengthTraitsToBeDistributed = new SortedList<AgentVillagerAdvanced.StrengthTrait, int>();
-        while (newVillagerTemp > 0)
-        {
-
-        }
+        personalitiesToBeDistributed = TraitDistribution(newVillagerAmount, p);
+        speedTraitsToBeDistributed = TraitDistribution(newVillagerAmount, sp);
+        strengthTraitsToBeDistributed = TraitDistribution(newVillagerTemp, str);
     }
 }

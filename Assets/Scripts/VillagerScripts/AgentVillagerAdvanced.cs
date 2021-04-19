@@ -39,11 +39,20 @@ public class AgentVillagerAdvanced : AgentVillager1
     {
         if (currentHeldFruit > 0)
         {
-            energyLossRate =  1;
-            return;
+            energyLossRate += 1 + (0.1F * currentHeldFruit);
         }
-        energyLossRate = 1;
+        else
+        {
+            energyLossRate = 1;
+        }
     }
+
+    private IEnumerator loseEnergy()
+    {
+        currentEnergy -= (Time.deltaTime * energyLossRate);
+        yield return new WaitForSeconds(1);
+    }
+
 
     private void ChanceOfDeath()
     {
@@ -124,7 +133,8 @@ public class AgentVillagerAdvanced : AgentVillager1
         //    age += ageCounter;
         //}
         //Debug.Log(age);
-        currentEnergy -= (Time.deltaTime * energyLossRate);
+        CalculateEnergyLossRate();
+        StartCoroutine(loseEnergy());
         energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
         switchDirectionCounter += Time.deltaTime;
         if (currentEnergy <= 0)
@@ -161,7 +171,6 @@ public class AgentVillagerAdvanced : AgentVillager1
                 StartCoroutine(WaitSeconds(1));
                 FruitBush closest = closestBush.GetComponent(typeof(FruitBush)) as FruitBush;
                 currentHeldFruit = closest.PickFruit(carryingCapacity, currentHeldFruit);
-                fruitPicked = false;
                 if (closest.GetTotalFruit() <= 0)
                 {
                     closestBush = null;
@@ -181,21 +190,21 @@ public class AgentVillagerAdvanced : AgentVillager1
     }
  
 
-    public enum Personality 
+    public enum Personality : int
     {
         Selfish,
         Neutral,
         Empathetic
     }
 
-    public enum StrengthTrait
+    public enum StrengthTrait : int
     {
         Strong,
         Regular,
         Weak,
     }
 
-    public enum SpeedTrait
+    public enum SpeedTrait 
     {
         Fast,
         Regular,
