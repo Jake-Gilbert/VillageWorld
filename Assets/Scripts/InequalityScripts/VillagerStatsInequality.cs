@@ -11,6 +11,7 @@ public class VillagerStatsInequality : VillagerStats
     private FloorZoneAdvanced floorZone;
     private bool foundFloorZone;
     private int dominantPCount = int.MinValue;
+    private float timer = 0;
     void Start()
     {
         dominantP = GameObject.Find("DominantPersonality").GetComponent<TMP_Text>();
@@ -28,23 +29,30 @@ public class VillagerStatsInequality : VillagerStats
             }
         }
         KeyValuePair< AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
-        dominantPCount = pCount;
+        //dominantPCount = pCount;
         return dominantP;
     }
 
     void Update()
     {
+        
+        if (timer > 2)
+        {
+            if (getDominantPersonality().Value > dominantPCount)
+            {
+                dominantP.text = floorZone.GetDominantPersonality().ToString();
+            }
+            timer = 0;
+        }
+        timer += Time.deltaTime;
         if (!foundFloorZone)
         {
             floorZone = FindObjectOfType<FloorZoneAdvanced>();
         }
-        if (getDominantPersonality().Value > dominantPCount)
-        {
-           // dominantP.text =  FloorZone  getDominantPersonality().ToString();
-        }
-        else
-        {
-            dominantP.text = "No dominant Personality";
-        }
+
+        //else
+        //{
+        //    dominantP.text = "No dominant Personality";
+        //}
     }
 }

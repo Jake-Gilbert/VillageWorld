@@ -6,7 +6,15 @@ public class FruitBush : MonoBehaviour
 {
     public GameObject bush;
     private SphereCollider collider;
+    [SerializeField]
     private int numberOfFruit;
+    private bool controllerFound = false;
+    private bool fruitDepleted = false;
+    private bool deathTimerEnabled = false;
+    public bool visible = true;
+    [SerializeField]
+    private float deathTimer = 0;
+    FruitBushControllerAdvanced fruitBushController;
     private void Start()
     {
         collider = GetComponent<SphereCollider>();
@@ -16,12 +24,17 @@ public class FruitBush : MonoBehaviour
         {
             GameObject rotationPoint = new GameObject();
             rotationPoint.transform.position = bush.transform.position;
-            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), bush.transform.position + new Vector3(0,  collider.radius * 2.9F, 0), Quaternion.identity);
-            fruit.transform.parent = rotationPoint.transform;         
-            rotationPoint.transform.eulerAngles = new Vector3(Random.Range(-100,100), Random.Range(-50, 50), Random.Range(-100, 100));
+            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), bush.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
+            fruit.transform.parent = rotationPoint.transform;
+            rotationPoint.transform.eulerAngles = new Vector3(Random.Range(-100, 100), Random.Range(-50, 50), Random.Range(-100, 100));
             fruit.transform.parent = bush.transform;
             Destroy(rotationPoint.gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        SpawnFruit();
     }
 
     public int GetTotalFruit()
@@ -49,10 +62,27 @@ public class FruitBush : MonoBehaviour
         return 0;
     }
 
+    public void SpawnFruit()
+    {
+        collider = GetComponent<SphereCollider>();
+        int noOfFruits = Random.Range(1, 6);
+        for (int i = 0; i < noOfFruits; i++)
+        {
+            GameObject rotationPoint = new GameObject();
+            rotationPoint.transform.position = bush.transform.position;
+            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), bush.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
+            fruit.transform.parent = rotationPoint.transform;
+            rotationPoint.transform.eulerAngles = new Vector3(Random.Range(-100, 100), Random.Range(-50, 50), Random.Range(-100, 100));
+            fruit.transform.parent = bush.transform;
+            Destroy(rotationPoint.gameObject);
+        }
+        numberOfFruit = noOfFruits;
+    }
+
     public int PickFruit(int carryingCapacity, int heldFruit)
     {
         int fruitToPick = 0;
-        if(numberOfFruit > 0)
+        if (numberOfFruit > 0)
         {
             if (numberOfFruit < carryingCapacity - heldFruit)
             {
@@ -71,18 +101,31 @@ public class FruitBush : MonoBehaviour
                     Destroy(fruit);
                 }
             }
-           return fruitToPick;           
+            return fruitToPick;
         }
         return 0;
     }
-    private void Update()
+
+    private void FixedUpdate()
     {
-        if(numberOfFruit <= 0)
+        if (numberOfFruit > 0)
         {
-            gameObject.SetActive(false);
+            visible = true;
         }
-      
+        if (!controllerFound)
+        {
+            fruitBushController = FindObjectOfType<FruitBushControllerAdvanced>();
+            controllerFound = true;
+        }
+        if (numberOfFruit <= 0 && !fruitDepleted)
+        {
+            deathTimerEnabled = true;
+            visible = false;
+            gameObject.SetActive(false);
+            fruitBushController.depletedBushes.Add(gameObject);
+            fruitDepleted = true;
+        }
     }
 
-
 }
+

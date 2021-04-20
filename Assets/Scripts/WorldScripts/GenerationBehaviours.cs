@@ -22,6 +22,7 @@ public class GenerationBehaviours : MonoBehaviour
     {
         floorzone.Reproduce();
         controller.ReplenishBushes();
+        controller.ProduceNewBushes(Random.Range(3, 6));
         generation += 1;
     }
 
@@ -40,9 +41,6 @@ public class GenerationBehaviours : MonoBehaviour
             villagerStats = FindObjectOfType<GetVillagerStats>();
             floorzone.InitialSpawning();
             initialised = true;
-            Debug.Log(floorzone.GetDominantPersonality().ToString());
-            Debug.Log(floorzone.GetDominantStrengthTrait().ToString());
-            Debug.Log(floorzone.GetDominantSpeedTrait().ToString());
         }
         if (timer >= 60 || timer >= 1 && villagerStats.NoFruitBushes())
         {

@@ -20,7 +20,7 @@ public class TimeScaleController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightControl)) 
         {
-            if (Time.timeScale < 3)
+            if (Time.timeScale < 4.25F)
             {
                 Time.timeScale += 0.25F;
             }

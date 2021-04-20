@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using static AgentVillagerAdvanced;
 
 public class FloorZoneAdvanced : FloorZone
 {
     [SerializeField]
-    private ReproductionWithBias reproductionWithBias;
+    private ReproductionWithBias reproduction;
     int livingVillagersCount;
     static int villagerIndex;
-    private new List<Vector3> positions;
+    private List<Vector3> positionsAdvanced;
     private SortedList<Personality, int> dominantPersonality;
     private SortedList<StrengthTrait, int> dominantStrength;
     private SortedList<SpeedTrait, int> dominantSpeed;
@@ -19,7 +20,7 @@ public class FloorZoneAdvanced : FloorZone
     private void Awake()
     {
         villagerIndex = 0;
-        positions = new List<Vector3>();
+        positionsAdvanced = new List<Vector3>();
         dominantPersonality = new SortedList<Personality, int>();
         dominantPersonality.Add(Personality.Empathetic, 0);
         dominantPersonality.Add(Personality.Neutral, 0);
@@ -41,7 +42,7 @@ public class FloorZoneAdvanced : FloorZone
     }
     public void InitialSpawning()
     {
-        int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.5F, 1) + 1);
+        int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.8F, 1) + 1);
         GenerateInitialAgents(villagersToSpawn);
     }
 
@@ -81,6 +82,7 @@ public class FloorZoneAdvanced : FloorZone
             spawnPoint.transform.parent = gameObject.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
+            villager.GetComponent<NavMeshAgent>().Warp(spawnPoint.transform.position);
             villager.GetComponent<AgentVillagerAdvanced>().personality = GetRandomEnum<Personality>();
             villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetRandomEnum<StrengthTrait>();
             villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetRandomEnum<SpeedTrait>();
@@ -91,14 +93,36 @@ public class FloorZoneAdvanced : FloorZone
             capsuleCollider.enabled = false;
             livingVillagersCount++;
             villagerIndex++;
+            Destroy(spawnPoint);
+        }
+    }
+
+    private void GenerateInitialAgentsNotRandom(int villagersToSpawn, int[] quantityOfEachPersonality)
+    {
+        for (int i = 0; i < villagersToSpawn; i++)
+        {
+            GameObject spawnPoint = new GameObject();
+            spawnPoint.transform.position = gameObject.transform.position;
+            spawnPoint.transform.parent = gameObject.transform;
+            spawnPoint.transform.localPosition = GenerateCoordinates();
+            GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
+            villager.GetComponent<NavMeshAgent>().Warp(spawnPoint.transform.position);
+            villager.GetComponent<AgentVillagerAdvanced>().personality = GetRandomEnum<Personality>();
+            villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetRandomEnum<StrengthTrait>();
+            villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetRandomEnum<SpeedTrait>();
+            villager.GetComponent<AgentVillagerAdvanced>().floor = floor;
+            villager.name = "Villager" + (villagerIndex + 1);
+            villager.tag = "Villager";
+            CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
+            capsuleCollider.enabled = false;
+            livingVillagersCount++;
+            villagerIndex++;
+            Destroy(spawnPoint);
         }
     }
     private void GenerateOffSpring(SortedList<Personality, int> personalites, SortedList<StrengthTrait, int> strengths, SortedList<SpeedTrait, int> speeds)
     {
         int villagersToGenerate = personalites.Count;
-        Debug.Log("Personaltiy dist : " + string.Join(", ", personalites));
-        Debug.Log("Strenght dist : " + string.Join(", ", strengths));
-        Debug.Log("Speed dist: : " + string.Join(", ", speeds));
         while (villagersToGenerate > 0)
         {
             villagersToGenerate--;
@@ -168,26 +192,28 @@ public class FloorZoneAdvanced : FloorZone
     {
         if (livingVillagersCount < 0)
         {
+            Debug.Log("Population can't grow");
             return;
         }
         else
         {
-            if (GetFruitCount() < 0)
-            {
-                Debug.Log("Population can't grow");
-                return;
-            }
+            //if (FindObjectOfType < GetVillagerStats() > () < 0)
+            //{
+            //    Debug.Log("Population can't grow");
+            //    return;
+            //}
             int newVillagerAmount = GetFruitCount() / livingVillagersCount;
-            reproductionWithBias.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
-            GenerateOffSpring(reproductionWithBias.getPersonalityDistribution(), reproductionWithBias.getStrengthDistribution(), reproductionWithBias.getSpeedtDistribution());
+            reproduction.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
+            GenerateOffSpring(reproduction.getPersonalityDistribution(), reproduction.getStrengthDistribution(), reproduction.getSpeedtDistribution());
+            dominantPersonality.Clear();
+            dominantStrength.Clear();
+            dominantSpeed.Clear();
             Debug.Log("alive: " + livingVillagersCount);
         }
     }
 
     public Personality GetDominantPersonality()
     {
-        Debug.Log(string.Join(",", dominantPersonality));
-        Debug.Log(dominantPersonality.Keys.Count);
         int max = dominantPersonality.Values.Max();
         List<Personality> maxValuesIndexes = dominantPersonality.Keys.Where(k => dominantPersonality[k] == max).ToList();
         return (maxValuesIndexes.Count > 1) ? maxValuesIndexes[Random.Range(0, maxValuesIndexes.Count)] : maxValuesIndexes[0];
@@ -195,8 +221,6 @@ public class FloorZoneAdvanced : FloorZone
 
     public StrengthTrait GetDominantStrengthTrait()
     {
-        Debug.Log(string.Join(",", dominantStrength));
-        Debug.Log(dominantStrength.Keys.Count);
         int max = dominantStrength.Values.Max();
         List<StrengthTrait> maxValuesIndexes = dominantStrength.Keys.Where(k => dominantStrength[k] == max).ToList();
         return dominantStrength.Keys[dominantStrength.IndexOfValue(dominantStrength.Values.Max())];
@@ -204,21 +228,24 @@ public class FloorZoneAdvanced : FloorZone
 
     public SpeedTrait GetDominantSpeedTrait()
     {
-        Debug.Log(string.Join(",", dominantSpeed));
         int max = dominantSpeed.Values.Max();
         List<SpeedTrait> maxValuesIndexes = dominantSpeed.Keys.Where(k => dominantSpeed[k] == max).ToList();
         return dominantSpeed.Keys[dominantSpeed.IndexOfValue(dominantSpeed.Values.Max())];
     }
 
+    private void FixedUpdate()
+    {
+        livingVillagersCount = GameObject.FindGameObjectsWithTag("Villager").Length;
+    }
     private new Vector3 GenerateCoordinates()
     {
         Vector3 coordinates = Vector3.zero;
 
-        if (positions.Count > 0)
+        if (positionsAdvanced.Count > 0)
         {
             coordinates.x = Random.Range(-0.15F, 0.15F);
             coordinates.z = Random.Range(-0.15F, 0.15F);
-            foreach (Vector3 existingPosition in positions)
+            foreach (Vector3 existingPosition in positionsAdvanced)
             {
                 if (existingPosition.x - coordinates.x > 0.25F && existingPosition.z - coordinates.z > 0.25F)
                 {
@@ -231,7 +258,7 @@ public class FloorZoneAdvanced : FloorZone
         {
             coordinates.x = Random.Range(-0.15F, 0.15F);
             coordinates.z = Random.Range(-0.15F, 0.15F);
-            positions.Add(coordinates);
+            positionsAdvanced.Add(coordinates);
         }
         coordinates.y = 1F;
         return coordinates;
