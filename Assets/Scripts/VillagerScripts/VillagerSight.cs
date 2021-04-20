@@ -5,11 +5,19 @@ using UnityEngine;
 public class VillagerSight : MonoBehaviour
 {
     public GameObject nearestBush;
+    public GameObject nearestVillager;
     public AgentVillagerAdvanced villager;
 
 
     private void FixedUpdate()
     {
+        if (nearestBush != null)
+        {
+            if (nearestBush.GetComponent<FruitBush>().GetTotalFruit() <= 0)
+            {
+                nearestBush = null;
+            }
+        }
         RaycastHit hit;             
         Ray lineOfSight = new Ray(villager.transform.position, villager.transform.forward);
         Debug.DrawRay(villager.transform.position, villager.transform.forward);
@@ -17,9 +25,42 @@ public class VillagerSight : MonoBehaviour
         {
             if (hit.collider.CompareTag("Bush") && nearestBush == null) 
             {
-                villager.closestBush = hit.collider.gameObject;
-                villager.bushSeen = true;
-                nearestBush = null;
+                nearestBush = hit.collider.gameObject;
+                if (nearestBush.GetComponent<FruitBush>().visible)
+                {
+                    villager.closestBush = hit.collider.gameObject;
+                    villager.bushSeen = true;
+                }
+            }
+            else if(hit.collider.CompareTag("Bush") && nearestBush != null && hit.collider.CompareTag("Bush") != nearestBush)
+            {
+                GameObject otherBush = hit.collider.gameObject;
+                float distanceNewBush = Vector3.Distance(gameObject.transform.position, otherBush.transform.position);
+                float distanceOldBush = Vector3.Distance(gameObject.transform.position, nearestBush.transform.position);
+                if (distanceNewBush < distanceOldBush)
+                {
+                    nearestBush = otherBush;
+                    villager.closestBush = nearestBush;
+                    villager.bushSeen = true;
+                }
+            
+            }
+
+            if (hit.collider.CompareTag("Villager") && nearestVillager == null)
+            {
+                nearestVillager = hit.collider.gameObject;
+            }
+            else if (hit.collider.CompareTag("Villager") && hit.collider.CompareTag("Villager") != nearestVillager)
+            {
+                GameObject otherVillager = hit.collider.gameObject;
+                float distanceNewVillager = Vector3.Distance(gameObject.transform.position, otherVillager.transform.position);
+                float distanceOldVillager = Vector3.Distance(gameObject.transform.position, nearestVillager.transform.position);
+                if (distanceNewVillager < distanceOldVillager)
+                {
+                    nearestVillager = otherVillager;
+                    villager.nearestVillager = nearestVillager;
+                    villager.villagerSeen = true;
+                }
             }
         
         }

@@ -110,6 +110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bush: {fileID: 3884452408968108969}
+  numberOfFruit: 0
+  visible: 1
+  deathTimer: 0
 --- !u!208 &7677841921698156217
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -140,6 +143,7 @@ GameObject:
   - component: {fileID: 4560874648508342565}
   - component: {fileID: 5813581215579523264}
   - component: {fileID: 3843448464392128425}
+  - component: {fileID: 5971492953536182783}
   m_Layer: 8
   m_Name: FruitBush
   m_TagString: Untagged
@@ -256,3 +260,15 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &5971492953536182783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560874648508342564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 257cc91c141adcb428fe3e219f1a2488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
