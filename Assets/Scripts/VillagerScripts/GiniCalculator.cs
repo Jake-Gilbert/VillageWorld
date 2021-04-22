@@ -89,7 +89,7 @@ public class GiniCalculator : MonoBehaviour
         return GameObject.FindGameObjectsWithTag("Bush").Length > 0 ? true : false;
     }
 
-    protected float[] GetVillagerScores()
+    public float[] GetVillagerScores()
     {
         int fruitCollected = getVillagerStats.GetTotalFruitCollected();
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");

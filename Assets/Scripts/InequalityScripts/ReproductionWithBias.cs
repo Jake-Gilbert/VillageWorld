@@ -40,16 +40,33 @@ public class ReproductionWithBias : MonoBehaviour
 
     private T RouletteSelection< T>(KeyValuePair<T, float> lowerBound, KeyValuePair<T, float> middleBound, KeyValuePair<T, float> upperBound)
     {
-        float value = Random.value;
-        if (value <= lowerBound.Value)
+        if (lowerBound.Value <= 0.1 && middleBound.Value <= 0.1)
         {
-            return lowerBound.Key;
+            float value = Random.value;
+            if (value <= 0.15)
+            {
+                return lowerBound.Key;
+            }
+            else if (value <= 0.3)
+            {
+                return middleBound.Key;
+            }
+            return upperBound.Key;
         }
-        else if (value <= middleBound.Value)
+        else
         {
-            return middleBound.Key;
+            float value = Random.value;
+            if (value <= lowerBound.Value)
+            {
+                return lowerBound.Key;
+            }
+            else if (value <= middleBound.Value)
+            {
+                return middleBound.Key;
+            }
+            return upperBound.Key;
         }
-        return upperBound.Key;
+       
     }
 
     private SortedList<T, int> TraitDistribution<T>(int numberOfVillagers, SortedList<T, int> traits)

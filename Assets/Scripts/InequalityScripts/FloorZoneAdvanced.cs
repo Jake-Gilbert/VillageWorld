@@ -45,12 +45,26 @@ public class FloorZoneAdvanced : FloorZone
         //int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.8F, 1) + 1);
         // GenerateInitialAgents(villagersToSpawn);
         SortedList<Personality, int> personalityAndQuantity = new SortedList<Personality, int>();
-        personalityAndQuantity.Add(Personality.Empathetic, 2);
-        personalityAndQuantity.Add(Personality.Neutral, 2);
-        personalityAndQuantity.Add(Personality.Selfish, 2);
+        personalityAndQuantity.Add(Personality.Empathetic, 3);
+        personalityAndQuantity.Add(Personality.Neutral, 3);
+        personalityAndQuantity.Add(Personality.Selfish, 3);
         GenerateInitialAgentsNotRandom(6, personalityAndQuantity);
     }
 
+    public SortedList<Personality, int> GetPersonalitiesAndQuantities()
+    {
+        return dominantPersonality;
+    }
+
+    public SortedList<StrengthTrait, int> getStrengthsAndQuantities()
+    {
+        return dominantStrength;
+    }
+
+    public SortedList<SpeedTrait, int> GetSpeedsAndQuantities()
+    {
+        return dominantSpeed;
+    }
     private T GetRandomEnum<T>()
     {
         IList<T> enumList = System.Enum.GetValues(typeof(T)).Cast<T>().ToList();
@@ -175,6 +189,9 @@ public class FloorZoneAdvanced : FloorZone
   
     public void Reproduce()
     {
+        Debug.Log("Personality : " + string.Join(",", dominantPersonality));
+        Debug.Log("Speed : " + string.Join(",", dominantSpeed));
+        Debug.Log("Strength : " + string.Join(",", dominantStrength));
         if (GameObject.FindGameObjectsWithTag("Villager").Length < 0)
         {
             Debug.Log("Population can't grow");

@@ -475,13 +475,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444980543}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d2b2ec19d3a99444bf068e1258ac9e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 32d9303843c321f4fad6cb3623adc352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  getVillagerStats: {fileID: 0}
+  getVillagerStats: {fileID: 824286579}
   giniValues: []
+  inequalityValues: []
+  villagerStatsInequality: {fileID: 357333112}
+  villagerStats: {fileID: 824286579}
+  running: 1
 --- !u!4 &444980545
 Transform:
   m_ObjectHideFlags: 0
@@ -599,6 +603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 824286580}
   - component: {fileID: 824286579}
+  - component: {fileID: 824286581}
   m_Layer: 0
   m_Name: VillagerStats
   m_TagString: Untagged
@@ -632,6 +637,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &824286581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824286578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3572b01e9012bd429c9a00f22169a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &886974442
 GameObject:
   m_ObjectHideFlags: 0
@@ -1809,6 +1826,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1704833413}
   - component: {fileID: 1704833412}
+  - component: {fileID: 1704833414}
   m_Layer: 0
   m_Name: CSVWriter
   m_TagString: Untagged
@@ -1823,7 +1841,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1704833411}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 169a94e9490241a4fbeab347a7a49807, type: 3}
   m_Name: 
@@ -1842,3 +1860,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1704833414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704833411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1b06a5c67fd9134dbe2a0881f755aaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  giniCalculator: {fileID: 444980544}
