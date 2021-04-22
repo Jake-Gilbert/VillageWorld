@@ -1,11 +1,3 @@
-Generation,Max Population, Final Population,TotalFruitCollected, FruitAvailable, MinFruitCollected,MaxFruitColllected,AvgFruitCollected, Dominant Personality, Dominant Speed,Dominant Strength, Quantity of Personality, Quantity of Speed, Quantity of Strength ,Gini
-1,9,16,0,224,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-2,16,33,0,219,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-3,33,37,0,224,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-4,37,51,0,198,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-5,51,54,0,170,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-6,54,63,0,204,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-7,63,64,0,180,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-8,64,69,0,241,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-9,69,70,0,185,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
-10,70,75,0,181,0,0,0,Selfish,Fast,Strong,[Selfish, 0],[Neutral, 0],[Empathetic
+Generation,Max Population, Final Population,TotalFruitCollected, FruitAvailable, MinFruitCollected,MaxFruitColllected,AvgFruitCollected, Dominant Personality, Dominant Speed,Dominant Strength , Quantity of Selfish, Quantity of Neutral, Quantity of Empathetic ,Gini
+1,3,3,19,175,0,12,6,Empathetic,Fast,Strong,0,0,3,1
+2,9,6,63,188,0,23,6,Selfish,Fast,Strong,2,1,3,1

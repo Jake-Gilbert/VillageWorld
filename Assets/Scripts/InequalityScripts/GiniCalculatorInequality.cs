@@ -10,13 +10,20 @@ public class GiniCalculatorInequality : GiniCalculator
     [SerializeField]
     private VillagerStatsInequality villagerStatsInequality;
     [SerializeField]
-    private GetVillagerStats villagerStats;
+    private GenerationBehaviours behaviours;
     private int currentGeneration = 1;
     public bool running = true;
+    private bool savedInfoForGeneration = false;
     // Start is called before the first frame update
     void Start()
     {
 
+    }
+
+    private IEnumerator MakeTrue()
+    {
+        yield return new WaitForSeconds(2);
+        savedInfoForGeneration = false;
     }
 
     private void Update()
@@ -25,16 +32,20 @@ public class GiniCalculatorInequality : GiniCalculator
         {
             running = false;
         }
-        if (currentGeneration != FindObjectOfType<GenerationBehaviours>().GetCurrentGeneration() && running)
+        if (savedInfoForGeneration) 
+        {
+            StartCoroutine(MakeTrue());
+        }
+        if (behaviours.timer >= 29.5F && running && !savedInfoForGeneration)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(currentGeneration);
             sb.Append(",");
             sb.Append(villagerStatsInequality.GetMaximumAliveInGeneration(currentGeneration));
             sb.Append(",");
-            sb.Append(villagerStats.VillagersAlive());
+            sb.Append(GameObject.FindGameObjectsWithTag("Villager").Length);
             sb.Append(",");
-            sb.Append(villagerStats.GetTotalFruitCollected());
+            sb.Append(FindObjectOfType<FloorZoneAdvanced>().GetFruitCount());
             sb.Append(",");
             sb.Append(GameObject.FindGameObjectsWithTag("Fruit").Length);
             sb.Append(",");
@@ -53,17 +64,18 @@ public class GiniCalculatorInequality : GiniCalculator
             SortedList<AgentVillagerAdvanced.StrengthTrait, int> speedsTemp = villagerStatsInequality.GetStrengthsAndQuantities();
             sb.Append(speedsTemp.Keys.ToList()[strengthsTemp.IndexOfValue(strengthsTemp.Values.Max())]);
             sb.Append(",");
-            sb.Append(string.Join(",", personalitiesTemp));
+            sb.Append(villagerStatsInequality.GetQuantityOfPersonality(AgentVillagerAdvanced.Personality.Selfish));
             sb.Append(",");
-            sb.Append(string.Join(",", speedsTemp));
+            sb.Append(villagerStatsInequality.GetQuantityOfPersonality(AgentVillagerAdvanced.Personality.Neutral));
             sb.Append(",");
-            sb.Append(string.Join(",", strengthsTemp));
+            sb.Append(villagerStatsInequality.GetQuantityOfPersonality(AgentVillagerAdvanced.Personality.Empathetic));
+            sb.Append(",");
             float[] scores = GetVillagerScores();
-            sb.Append(",");
             float gini = CalculateGiniCoefficient(scores);
             sb.Append(gini);
             inequalityValues.Add(sb.ToString());
-            currentGeneration = FindObjectOfType<GenerationBehaviours>().GetCurrentGeneration();
+            savedInfoForGeneration = true;
+            currentGeneration += 1;
         }
 
     }

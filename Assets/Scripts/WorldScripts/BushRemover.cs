@@ -8,7 +8,7 @@ public class BushRemover : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!gameObject.transform.Find("Bush").gameObject.activeSelf)
+        if (!gameObject.transform.Find("Bush").gameObject.activeSelf && gameObject != null)
         {
             if (deathTimer > 30)
             {

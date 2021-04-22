@@ -209,7 +209,7 @@ public class GiniCalculator : MonoBehaviour
         int fruitCollected = 0;
         for (int i = 0; i < villagers.Length; i++)
         {
-            fruitCollected += villagers[i].GetComponent<AgentVillager1>().GetFruitCollected();
+            fruitCollected += villagers[i].GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
         }
         return fruitCollected;
     }
@@ -219,7 +219,7 @@ public class GiniCalculator : MonoBehaviour
         int[] fruitPerCitizen = new int[villagers.Length];
         for (int i = 0; i < fruitPerCitizen.Length; i++)
         {
-            fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillager1>().GetFruitCollected();
+            fruitPerCitizen[i] = villagers[i].GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
         }
         System.Array.Sort(fruitPerCitizen);
         return fruitPerCitizen;
