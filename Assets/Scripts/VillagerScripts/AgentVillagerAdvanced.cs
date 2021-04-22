@@ -7,6 +7,8 @@ public class AgentVillagerAdvanced : AgentVillager1
 {
     new GameObject floor;
     public GameObject nearestVillager;
+    public Material selfish;
+    public Material empathic;
     private float desireToShare;
     private float desireToReveal;
     private float ageOfDeath;
@@ -70,7 +72,7 @@ public class AgentVillagerAdvanced : AgentVillager1
     {
         if (currentHeldFruit > 0)
         {
-            energyLossRate = 1 + (0.05F * currentHeldFruit);
+            energyLossRate = 1 + (0.04F * currentHeldFruit);
         }
         else
         {
@@ -84,19 +86,23 @@ public class AgentVillagerAdvanced : AgentVillager1
         currentEnergy -= (Time.deltaTime * energyLossRate);
     }
 
+    private void Awake()
+    {
+        currentEnergy = 60;
+        energyLossRate = 1;
+    }
 
- 
     private void Start()
     {
         receivedFruit = false;
         ageCounter = 0;
         ageOfDeath = Random.Range(45, 60);
-        currentEnergy = 60;
         energyLossRate = 1;
         sharing = false;
         switch (personality)
-        {
+        {          
             case Personality.Selfish:
+                gameObject.GetComponent<MeshRenderer>().material = selfish;
                 desireToReveal = 0;
                 desireToShare = 0;
                 break;
@@ -105,6 +111,7 @@ public class AgentVillagerAdvanced : AgentVillager1
                 desireToShare = Random.Range(.25F, .50F);
                 break;
             case Personality.Empathetic:
+                gameObject.GetComponent<MeshRenderer>().material = empathic;
                 desireToReveal = Random.Range(.75F, 1);
                 desireToShare = Random.Range(.75F, 1);
                 break;                     
@@ -212,9 +219,9 @@ public class AgentVillagerAdvanced : AgentVillager1
                     floor.PlaceFruit(currentHeldFruit, gameObject.GetComponent<AgentVillagerAdvanced>());
                     totalFruitCollected += currentHeldFruit;
                     currentEnergy += currentHeldFruit * 10;
-                    if (currentEnergy > 100)
+                    if (currentEnergy > 60)
                     {
-                        currentEnergy = 100;
+                        currentEnergy = 60;
                     }
                     currentHeldFruit = 0;
                     placed = true;

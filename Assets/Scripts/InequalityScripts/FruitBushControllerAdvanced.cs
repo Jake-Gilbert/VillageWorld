@@ -16,16 +16,24 @@ public class FruitBushControllerAdvanced : FruitBushController
     {
         int bushesToReplenish = (int) (depletedBushes.Count * (Random.Range(0.3F, 0.9F)));
         List<GameObject> indexesToRemove = new List<GameObject>();
+        if (bushesToReplenish <= 0)
+        {
+            return;
+        }
         for (int i = 0; i < bushesToReplenish; i++)
         {
             if (depletedBushes[i] == null)
             {
                 indexesToRemove.Add(depletedBushes[i]);
             }
-            else
+            else if (!depletedBushes[i].activeSelf)
             {
                 depletedBushes[i].SetActive(true);
                 depletedBushes[i].GetComponent<FruitBush>().SpawnFruit();
+                indexesToRemove.Add(depletedBushes[i]);
+            }
+            else 
+            {
                 indexesToRemove.Add(depletedBushes[i]);
             }
         }

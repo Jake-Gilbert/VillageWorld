@@ -103,6 +103,7 @@ public class FruitBush : MonoBehaviour
     {
         if (numberOfFruit > 0)
         {
+            fruitDepleted = false;
             visible = true;
         }
         if (!controllerFound)

@@ -278,7 +278,12 @@ MonoBehaviour:
   randomPos: {x: 0, y: 0, z: 0}
   motionless: 0
   bushSeen: 0
+  nearestVillager: {fileID: 0}
+  selfish: {fileID: 2100000, guid: 21b5a4de0c59db1419656fedb36d6644, type: 2}
+  empathic: {fileID: 2100000, guid: ef9aa235e51056a4c80bc60b3d6cdbba, type: 2}
+  receivedFruit: 0
   carryingCapacity: 0
+  villagerSeen: 0
   personality: 0
   strengthTrait: 0
   speedTrait: 0

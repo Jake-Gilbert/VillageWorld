@@ -12,6 +12,7 @@ TagManager:
   - Zone
   - Bush
   - Villager
+  - Temp
   layers:
   - Default
   - TransparentFX
