@@ -4,13 +4,12 @@ using UnityEngine;
 using TMPro;
 public class FruitBush : MonoBehaviour
 {
-    public GameObject bush;
+    //public GameObject bush;
     private SphereCollider collider;
     [SerializeField]
-    private int numberOfFruit;
+    private int numberOfFruit = 0;
     private bool controllerFound = false;
     private bool fruitDepleted = false;
-    private bool deathTimerEnabled = false;
     public bool visible = true;
     [SerializeField]
     private float deathTimer = 0;
@@ -18,23 +17,18 @@ public class FruitBush : MonoBehaviour
     private void Start()
     {
         collider = GetComponent<SphereCollider>();
-        int noOfFruits = Random.Range(1, 6);
+        int noOfFruits = Random.Range(3, 7);
         numberOfFruit = noOfFruits;
         for (int i = 0; i < noOfFruits; i++)
         {
             GameObject rotationPoint = new GameObject();
-            rotationPoint.transform.position = bush.transform.position;
-            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), bush.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
+            rotationPoint.transform.position = gameObject.transform.position;
+            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), gameObject.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
             fruit.transform.parent = rotationPoint.transform;
             rotationPoint.transform.eulerAngles = new Vector3(Random.Range(-100, 100), Random.Range(-50, 50), Random.Range(-100, 100));
-            fruit.transform.parent = bush.transform;
+            fruit.transform.parent = gameObject.transform;
             Destroy(rotationPoint.gameObject);
         }
-    }
-
-    private void OnEnable()
-    {
-        SpawnFruit();
     }
 
     public int GetTotalFruit()
@@ -56,7 +50,6 @@ public class FruitBush : MonoBehaviour
                     Destroy(fruit);
                 }
             }
-
             return returnAmount;
         }
         return 0;
@@ -64,19 +57,19 @@ public class FruitBush : MonoBehaviour
 
     public void SpawnFruit()
     {
-        collider = GetComponent<SphereCollider>();
-        int noOfFruits = Random.Range(1, 6);
+        int noOfFruits = Random.Range(3, 7);
+        numberOfFruit = noOfFruits;
         for (int i = 0; i < noOfFruits; i++)
         {
             GameObject rotationPoint = new GameObject();
-            rotationPoint.transform.position = bush.transform.position;
-            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), bush.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
+            rotationPoint.transform.position = gameObject.transform.position;
+            GameObject fruit = (GameObject)Instantiate(Resources.Load("Fruit"), gameObject.transform.position + new Vector3(0, collider.radius * 2.9F, 0), Quaternion.identity);
             fruit.transform.parent = rotationPoint.transform;
             rotationPoint.transform.eulerAngles = new Vector3(Random.Range(-100, 100), Random.Range(-50, 50), Random.Range(-100, 100));
-            fruit.transform.parent = bush.transform;
+            fruit.transform.parent = gameObject.transform;
             Destroy(rotationPoint.gameObject);
         }
-        numberOfFruit = noOfFruits;
+        fruitDepleted = false;
     }
 
     public int PickFruit(int carryingCapacity, int heldFruit)
@@ -119,7 +112,6 @@ public class FruitBush : MonoBehaviour
         }
         if (numberOfFruit <= 0 && !fruitDepleted)
         {
-            deathTimerEnabled = true;
             visible = false;
             gameObject.SetActive(false);
             fruitBushController.depletedBushes.Add(gameObject);

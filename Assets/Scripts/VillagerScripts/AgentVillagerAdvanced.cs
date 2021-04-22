@@ -13,6 +13,7 @@ public class AgentVillagerAdvanced : AgentVillager1
     private float ageCounter;
     private float energyLossRate;
     private bool sharing;
+    public bool receivedFruit;
     private bool revealing;
     [SerializeField]
     private int carryingCapacity;
@@ -46,6 +47,10 @@ public class AgentVillagerAdvanced : AgentVillager1
         {
             sharing = true;
         }
+        else
+        {
+            sharing = false;
+        }
     }
 
     private IEnumerator CheckIfReavealing()
@@ -55,13 +60,17 @@ public class AgentVillagerAdvanced : AgentVillager1
         {
             revealing = true;
         }
+        else
+        {
+            revealing = false;
+        }
     }
 
     private void CalculateEnergyLossRate()
     {
         if (currentHeldFruit > 0)
         {
-            energyLossRate = 1 + (0.01F * currentHeldFruit);
+            energyLossRate = 1 + (0.05F * currentHeldFruit);
         }
         else
         {
@@ -79,8 +88,10 @@ public class AgentVillagerAdvanced : AgentVillager1
  
     private void Start()
     {
+        receivedFruit = false;
         ageCounter = 0;
-        ageOfDeath = Random.Range(70, 100); 
+        ageOfDeath = Random.Range(45, 60);
+        currentEnergy = 60;
         energyLossRate = 1;
         sharing = false;
         switch (personality)
@@ -156,8 +167,10 @@ public class AgentVillagerAdvanced : AgentVillager1
         if (ageCounter >= ageOfDeath)
         {
             Destroy(gameObject);
+            return;
         }
         StartCoroutine(CheckIfSharing());
+        StartCoroutine(CheckIfReavealing());
         ageCounter += Time.deltaTime;
         CalculateEnergyLossRate();
         StartCoroutine(loseEnergy());
@@ -167,18 +180,25 @@ public class AgentVillagerAdvanced : AgentVillager1
         {
             Destroy(gameObject);
             return;
-        }               
+        }
         if (currentHeldFruit > 0)
         {
-            if (sharing  && nearestVillager != null)
+            if (sharing && !receivedFruit)
             {
-                agent.SetDestination(nearestVillager.transform.position);
-                if (agent.remainingDistance <= 1)
+                gameObject.tag = "Temp";
+                GameObject[] viableVillagers = GameObject.FindGameObjectsWithTag("Villager");
+                GameObject dest = viableVillagers[Random.Range(0, viableVillagers.Length)];
+                agent.SetDestination(dest.transform.position);
+                gameObject.tag = "Villager";
+                if (agent.remainingDistance < 2)
                 {
-                    nearestVillager.GetComponent<AgentVillagerAdvanced>().currentHeldFruit += currentHeldFruit;
+                    AgentVillagerAdvanced destAgent = dest.GetComponent<AgentVillagerAdvanced>();
+                    destAgent.currentHeldFruit += currentHeldFruit;
+                    destAgent.receivedFruit = true;
                     currentHeldFruit = 0;
                     sharing = false;
                 }
+                StartCoroutine(ChangeToFalse(dest));
             }
             else
             {
@@ -201,16 +221,20 @@ public class AgentVillagerAdvanced : AgentVillager1
                 }
                 return;
             }
-          
+
         }
 
-        if (bushSeen && closestBush != null)
+        if (bushSeen && closestBush != null && closestBush.GetComponent<FruitBush>().visible)
         {
-            if (revealing && nearestVillager != null)
+            if (revealing)
             {
-                if (nearestVillager.GetComponent<AgentVillagerAdvanced>().closestBush == null)
+                gameObject.tag = "Temp";
+                GameObject[] viableVillagers = GameObject.FindGameObjectsWithTag("Villager");
+                gameObject.tag = "Villager";
+                GameObject neighbour = viableVillagers[Random.Range(0, viableVillagers.Length)];
+                if (neighbour.GetComponent<AgentVillagerAdvanced>().closestBush == null)
                 {
-                    nearestVillager.GetComponent<AgentVillagerAdvanced>().closestBush = closestBush;
+                    neighbour.GetComponent<AgentVillagerAdvanced>().closestBush = closestBush;
                 }
             }
             bool fruitPicked = false;
@@ -237,10 +261,16 @@ public class AgentVillagerAdvanced : AgentVillager1
                 ChangeDirection(randomPosition);
             }
         }
-
     }
  
-
+    IEnumerator ChangeToFalse(GameObject dest) 
+    {
+        yield return new WaitForSeconds(10);
+        if (dest != null)
+        {
+            dest.GetComponent<AgentVillagerAdvanced>().receivedFruit = false;
+        }
+    }
     public enum Personality : int
     {
         Selfish,

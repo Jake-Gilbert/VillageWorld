@@ -32,6 +32,11 @@ public class VillagerStatsInequality : VillagerStats
         //dominantPCount = pCount;
         return dominantP;
     }
+    
+    public int GetGeneration()
+    {
+        return floorZone.gene
+    }
 
     void Update()
     {
