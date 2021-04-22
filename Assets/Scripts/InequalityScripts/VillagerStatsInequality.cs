@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class VillagerStatsInequality : VillagerStats
 {
     private TMP_Text dominantP;
-    private TMP_Text dominantStr;
+    //private TMP_Text dominantStr;
     private SortedList<int, int> maximumAliveInGeneration = new SortedList<int, int>();
     private int maximumAlive = 0;
-    private TMP_Text dominantSpd;
+    //private TMP_Text dominantSpd;
     private FloorZoneAdvanced floorZone;
     private bool foundFloorZone;
     private int currentGeneration = 1;
@@ -24,18 +25,23 @@ public class VillagerStatsInequality : VillagerStats
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         int pCount = 0;
-        foreach  (GameObject villager in villagers)
+        foreach (GameObject villager in villagers)
         {
             if (villager.GetComponent<AgentVillagerAdvanced>().personality == floorZone.GetDominantPersonality())
             {
                 pCount++;
             }
         }
-        KeyValuePair< AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
+        KeyValuePair<AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
         //dominantPCount = pCount;
         return dominantP;
     }
-    
+
+    public int GetQuantityOfPersonality(AgentVillagerAdvanced.Personality personality)
+    {
+        return GameObject.FindGameObjectsWithTag("Villager").Where(x => x.GetComponent<AgentVillagerAdvanced>().personality == personality).Count();
+    }
+
     public SortedList<AgentVillagerAdvanced.Personality, int> GetPersonalitiesAndQuantities()
     {
         return floorZone.GetPersonalitiesAndQuantities();
@@ -62,8 +68,58 @@ public class VillagerStatsInequality : VillagerStats
     }
     private void Update()
     {
-        
+
     }
+
+    public int GetAverageFruit()
+    {
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        if (villagers.Length <= 0)
+        {
+            return 0;
+        }
+        return villagers.Sum(v => v.GetComponent<AgentVillagerAdvanced>()?.GetFruitCollected() ?? 0) / villagers.Length;
+    }
+
+    public int GetLeastFruit()
+    {
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        int least = int.MaxValue;
+        if (villagers.Length <= 0)
+        {
+            return 0;
+        }
+        foreach (GameObject villager in villagers)
+        {
+            int localLeast = villager.GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
+            if (localLeast < least)
+            {
+                least = localLeast;
+            }
+        }
+        return least;
+    }
+
+
+    public int GetMostFruit()
+    {
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        int most = int.MinValue;
+        if (villagers.Length <= 0)
+        {
+            return 0;
+        }
+        foreach (GameObject villager in villagers)
+        {
+            int localMost = villager.GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
+            if (localMost > most)
+            {
+                most = localMost;
+            }
+        }
+        return most;
+    }
+
     void FixedUpdate()
     {
         if (currentGeneration == FindObjectOfType<GenerationBehaviours>().GetCurrentGeneration())
@@ -82,7 +138,7 @@ public class VillagerStatsInequality : VillagerStats
             currentGeneration = FindObjectOfType<GenerationBehaviours>().GetCurrentGeneration();
             maximumAlive = 0;
         }
-        else if(maximumAlive < GameObject.FindGameObjectsWithTag("Villager").Length)
+        else if (maximumAlive < GameObject.FindGameObjectsWithTag("Villager").Length)
         {
             maximumAlive = GameObject.FindGameObjectsWithTag("Villager").Length;
         }

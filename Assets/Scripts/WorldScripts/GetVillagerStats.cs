@@ -23,7 +23,7 @@ public class GetVillagerStats : MonoBehaviour
         {
             return 0;
         }
-        return villagers.Sum(v => v.GetComponent<AgentVillager1>()?.GetFruitCollected() ?? 0) / villagers.Length;
+        return villagers.Sum(v => v.GetComponent<AgentVillagerAdvanced>()?.GetFruitCollected() ?? 0) / villagers.Length;
     }
 
     public int GetLeastFruit()
@@ -36,7 +36,7 @@ public class GetVillagerStats : MonoBehaviour
         }
         foreach (GameObject villager in villagers)
         {
-            int localLeast = villager.GetComponent<AgentVillager1>().GetFruitCollected();
+            int localLeast = villager.GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
             if (localLeast < least)
             {
                 least = localLeast;
@@ -65,7 +65,7 @@ public class GetVillagerStats : MonoBehaviour
         }
         foreach (GameObject villager in villagers)
         {          
-            int localMost = villager.GetComponent<AgentVillager1>().GetFruitCollected();
+            int localMost = villager.GetComponent<AgentVillagerAdvanced>().GetFruitCollected();
             if (localMost > most)
             {
                 most = localMost;

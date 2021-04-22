@@ -28,14 +28,14 @@ public class testController : MonoBehaviour
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
         controller.Move(moveDirection * Time.deltaTime);
-        if (Input.GetKey(KeyCode.Space))
-        {
-            GameObject[] bushes = GameObject.FindGameObjectsWithTag("Bush");
-            foreach(GameObject bush in bushes)
-            {
-                Destroy(bush);
-            }
-        }
+        //if (Input.GetKey(KeyCode.Space))
+        //{
+        //    GameObject[] bushes = GameObject.FindGameObjectsWithTag("Bush");
+        //    foreach(GameObject bush in bushes)
+        //    {
+        //        Destroy(bush);
+        //    }
+        //}
         if (Input.GetKey(KeyCode.Q))
         {
                 transform.Rotate(Vector3.up * speed * Time.deltaTime);

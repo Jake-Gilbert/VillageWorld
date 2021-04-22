@@ -92,6 +92,10 @@ public class AgentVillagerAdvanced : AgentVillager1
         energyLossRate = 1;
     }
 
+    public new int GetFruitCollected()
+    {
+        return totalFruitCollected;
+    }
     private void Start()
     {
         receivedFruit = false;
@@ -194,18 +198,25 @@ public class AgentVillagerAdvanced : AgentVillager1
             {
                 gameObject.tag = "Temp";
                 GameObject[] viableVillagers = GameObject.FindGameObjectsWithTag("Villager");
-                GameObject dest = viableVillagers[Random.Range(0, viableVillagers.Length)];
-                agent.SetDestination(dest.transform.position);
-                gameObject.tag = "Villager";
-                if (agent.remainingDistance < 2)
+                if (viableVillagers.Length < 1)
                 {
-                    AgentVillagerAdvanced destAgent = dest.GetComponent<AgentVillagerAdvanced>();
-                    destAgent.currentHeldFruit += currentHeldFruit;
-                    destAgent.receivedFruit = true;
-                    currentHeldFruit = 0;
                     sharing = false;
                 }
-                StartCoroutine(ChangeToFalse(dest));
+                else
+                {
+                    GameObject dest = viableVillagers[Random.Range(0, viableVillagers.Length)];
+                    agent.SetDestination(dest.transform.position);
+                    gameObject.tag = "Villager";
+                    if (agent.remainingDistance < 2)
+                    {
+                        AgentVillagerAdvanced destAgent = dest.GetComponent<AgentVillagerAdvanced>();
+                        destAgent.currentHeldFruit += currentHeldFruit;
+                        destAgent.receivedFruit = true;
+                        currentHeldFruit = 0;
+                        sharing = false;
+                    }
+                    StartCoroutine(ChangeToFalse(dest));
+                }  
             }
             else
             {
@@ -238,10 +249,17 @@ public class AgentVillagerAdvanced : AgentVillager1
                 gameObject.tag = "Temp";
                 GameObject[] viableVillagers = GameObject.FindGameObjectsWithTag("Villager");
                 gameObject.tag = "Villager";
-                GameObject neighbour = viableVillagers[Random.Range(0, viableVillagers.Length)];
-                if (neighbour.GetComponent<AgentVillagerAdvanced>().closestBush == null)
+                if (viableVillagers.Length < 1)
                 {
-                    neighbour.GetComponent<AgentVillagerAdvanced>().closestBush = closestBush;
+                    revealing = false;
+                }
+                else
+                {
+                    GameObject neighbour = viableVillagers[Random.Range(0, viableVillagers.Length)];
+                    if (neighbour.GetComponent<AgentVillagerAdvanced>().closestBush == null)
+                    {
+                        neighbour.GetComponent<AgentVillagerAdvanced>().closestBush = closestBush;
+                    }
                 }
             }
             bool fruitPicked = false;

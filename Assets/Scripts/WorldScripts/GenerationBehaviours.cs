@@ -9,7 +9,7 @@ public class GenerationBehaviours : MonoBehaviour
     private FruitBushControllerAdvanced controller;
     private GetVillagerStats villagerStats;
     private bool initialised;
-    private float timer;
+    public float timer;
     // Start is called before the first frame update
     private void Start()
     {

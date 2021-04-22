@@ -45,24 +45,6 @@ public class VillagerSight : MonoBehaviour
                 }
             
             }
-
-            //if (hit.collider.CompareTag("Villager") && nearestVillager == null)
-            //{
-            //    nearestVillager = hit.collider.gameObject;
-            //}
-            //else if (hit.collider.CompareTag("Villager") && hit.collider.CompareTag("Villager") != nearestVillager)
-            //{
-            //    GameObject otherVillager = hit.collider.gameObject;
-            //    float distanceNewVillager = Vector3.Distance(gameObject.transform.position, otherVillager.transform.position);
-            //    float distanceOldVillager = Vector3.Distance(gameObject.transform.position, nearestVillager.transform.position);
-            //    if (distanceNewVillager < distanceOldVillager)
-            //    {
-            //        nearestVillager = otherVillager;
-            //        villager.nearestVillager = nearestVillager;
-            //        villager.villagerSeen = true;
-            //    }
-            //}
-        
         }
     }
     

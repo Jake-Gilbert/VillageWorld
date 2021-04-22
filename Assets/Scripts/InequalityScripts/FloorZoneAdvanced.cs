@@ -46,8 +46,8 @@ public class FloorZoneAdvanced : FloorZone
         // GenerateInitialAgents(villagersToSpawn);
         SortedList<Personality, int> personalityAndQuantity = new SortedList<Personality, int>();
         personalityAndQuantity.Add(Personality.Empathetic, 3);
-        personalityAndQuantity.Add(Personality.Neutral, 3);
-        personalityAndQuantity.Add(Personality.Selfish, 3);
+       // personalityAndQuantity.Add(Personality.Neutral, 3);
+       // personalityAndQuantity.Add(Personality.Selfish, 3);
         GenerateInitialAgentsNotRandom(6, personalityAndQuantity);
     }
 
@@ -187,11 +187,30 @@ public class FloorZoneAdvanced : FloorZone
         }
     }
   
+    private IEnumerator ResetStructures()
+    {
+        yield return new WaitForSeconds(1);
+        dominantPersonality.Clear();
+        dominantStrength.Clear();
+        dominantSpeed.Clear();
+        dominantPersonality = new SortedList<Personality, int>();
+        dominantPersonality.Add(Personality.Empathetic, 0);
+        dominantPersonality.Add(Personality.Neutral, 0);
+        dominantPersonality.Add(Personality.Selfish, 0);
+
+        dominantStrength = new SortedList<StrengthTrait, int>();
+        dominantStrength.Add(StrengthTrait.Strong, 0);
+        dominantStrength.Add(StrengthTrait.Regular, 0);
+        dominantStrength.Add(StrengthTrait.Weak, 0);
+
+        dominantSpeed = new SortedList<SpeedTrait, int>();
+        dominantSpeed.Add(SpeedTrait.Fast, 0);
+        dominantSpeed.Add(SpeedTrait.Regular, 0);
+        dominantSpeed.Add(SpeedTrait.Slow, 0);
+    }
+
     public void Reproduce()
     {
-        Debug.Log("Personality : " + string.Join(",", dominantPersonality));
-        Debug.Log("Speed : " + string.Join(",", dominantSpeed));
-        Debug.Log("Strength : " + string.Join(",", dominantStrength));
         if (GameObject.FindGameObjectsWithTag("Villager").Length < 0)
         {
             Debug.Log("Population can't grow");
@@ -200,26 +219,9 @@ public class FloorZoneAdvanced : FloorZone
         else
         {
             int newVillagerAmount = GetFruitCount() / livingVillagersCount;
-            Debug.Log("VILLLGERS TO MAKE " + newVillagerAmount);
             reproduction.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
             GenerateOffSpring(newVillagerAmount, reproduction.getPersonalityDistribution(), reproduction.getStrengthDistribution(), reproduction.getSpeedtDistribution());
-            dominantPersonality.Clear();
-            dominantStrength.Clear();
-            dominantSpeed.Clear();
-            dominantPersonality = new SortedList<Personality, int>();
-            dominantPersonality.Add(Personality.Empathetic, 0);
-            dominantPersonality.Add(Personality.Neutral, 0);
-            dominantPersonality.Add(Personality.Selfish, 0);
-
-            dominantStrength = new SortedList<StrengthTrait, int>();
-            dominantStrength.Add(StrengthTrait.Strong, 0);
-            dominantStrength.Add(StrengthTrait.Regular, 0);
-            dominantStrength.Add(StrengthTrait.Weak, 0);
-
-            dominantSpeed = new SortedList<SpeedTrait, int>();
-            dominantSpeed.Add(SpeedTrait.Fast, 0);
-            dominantSpeed.Add(SpeedTrait.Regular, 0);
-            dominantSpeed.Add(SpeedTrait.Slow, 0);
+            StartCoroutine(ResetStructures());  
         }
     }
 
