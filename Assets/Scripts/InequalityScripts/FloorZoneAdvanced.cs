@@ -42,8 +42,13 @@ public class FloorZoneAdvanced : FloorZone
     }
     public void InitialSpawning()
     {
-        int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.8F, 1) + 1);
-        GenerateInitialAgents(villagersToSpawn);
+        //int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.8F, 1) + 1);
+        // GenerateInitialAgents(villagersToSpawn);
+        SortedList<Personality, int> personalityAndQuantity = new SortedList<Personality, int>();
+        personalityAndQuantity.Add(Personality.Empathetic, 2);
+        personalityAndQuantity.Add(Personality.Neutral, 2);
+        personalityAndQuantity.Add(Personality.Selfish, 2);
+        GenerateInitialAgentsNotRandom(6, personalityAndQuantity);
     }
 
     private T GetRandomEnum<T>()
@@ -52,21 +57,18 @@ public class FloorZoneAdvanced : FloorZone
         return enumList[Random.Range(0, enumList.Count())];
     }
     private T GetRandomOffspringTrait<T>(SortedList<T, int> traits)
-    {
+    { 
+        List<int> quantities = new List<int>();
+        List<T> traitKeys = new List<T>(traits.Keys);
         SortedList<T, int> validTraits = new SortedList<T, int>();
-        foreach (int quantity in traits.Values)
+        foreach (T key in traits.Keys)
         {
-            if (quantity > 0)
+            if (traits[key] > 0)
             {
-                validTraits.Add(traits.Keys[traits.IndexOfValue(quantity)], quantity);
-                Debug.Log("quantity : " + quantity + " pers : " + traits.Keys[traits.IndexOfValue(quantity)]);
+                validTraits.Add(key, traits[key]);
             }
         }
-        if (validTraits.Count > 1)
-        {
-            return validTraits.Keys[Random.Range(0, traits.Count)];
-        }
-        return validTraits.Keys[0];
+        return validTraits.Count > 1 ? validTraits.Keys.ToList()[Random.Range(0, validTraits.Count)] : validTraits.Keys.ToList()[0];
     }
     public new int GetFruitCount()
     {
@@ -82,7 +84,6 @@ public class FloorZoneAdvanced : FloorZone
             spawnPoint.transform.parent = gameObject.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
-            villager.GetComponent<NavMeshAgent>().Warp(spawnPoint.transform.position);
             villager.GetComponent<AgentVillagerAdvanced>().personality = GetRandomEnum<Personality>();
             villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetRandomEnum<StrengthTrait>();
             villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetRandomEnum<SpeedTrait>();
@@ -91,23 +92,23 @@ public class FloorZoneAdvanced : FloorZone
             villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;
-            livingVillagersCount++;
             villagerIndex++;
             Destroy(spawnPoint);
         }
     }
 
-    private void GenerateInitialAgentsNotRandom(int villagersToSpawn, int[] quantityOfEachPersonality)
+    private void GenerateInitialAgentsNotRandom(int villagersToSpawn, SortedList<Personality, int> quantityOfEachPersonality)
     {
-        for (int i = 0; i < villagersToSpawn; i++)
+        SortedList<Personality, int> tempPersonalityList = new SortedList<Personality, int>( quantityOfEachPersonality);
+        while (tempPersonalityList.Values.Sum() > 0)
         {
             GameObject spawnPoint = new GameObject();
             spawnPoint.transform.position = gameObject.transform.position;
             spawnPoint.transform.parent = gameObject.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
-            villager.GetComponent<NavMeshAgent>().Warp(spawnPoint.transform.position);
-            villager.GetComponent<AgentVillagerAdvanced>().personality = GetRandomEnum<Personality>();
+            villager.GetComponent<AgentVillagerAdvanced>().personality = GetRandomOffspringTrait(tempPersonalityList);
+            tempPersonalityList[villager.GetComponent<AgentVillagerAdvanced>().personality]--;
             villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetRandomEnum<StrengthTrait>();
             villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetRandomEnum<SpeedTrait>();
             villager.GetComponent<AgentVillagerAdvanced>().floor = floor;
@@ -115,47 +116,50 @@ public class FloorZoneAdvanced : FloorZone
             villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;
-            livingVillagersCount++;
             villagerIndex++;
             Destroy(spawnPoint);
-        }
+        }        
     }
-    private void GenerateOffSpring(SortedList<Personality, int> personalites, SortedList<StrengthTrait, int> strengths, SortedList<SpeedTrait, int> speeds)
+    private void GenerateOffSpring(int villagerQuantity, SortedList<Personality, int> personalites, SortedList<StrengthTrait, int> strengths, SortedList<SpeedTrait, int> speeds)
     {
-        int villagersToGenerate = personalites.Count;
+        int villagersToGenerate = villagerQuantity;
+        SortedList<Personality, int> personalitiesTemp = personalites;
+        SortedList<StrengthTrait, int> strenghtTemp = strengths;
+        SortedList<SpeedTrait, int> speedTemp = speeds;
         while (villagersToGenerate > 0)
         {
-            villagersToGenerate--;
             GameObject spawnPoint = new GameObject();
             spawnPoint.transform.position = gameObject.transform.position;
             spawnPoint.transform.parent = gameObject.transform;
             spawnPoint.transform.localPosition = GenerateCoordinates();
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
-            if (personalites.Values.Sum() > 0)
+
+            AgentVillagerAdvanced agentVillager = villager.GetComponent<AgentVillagerAdvanced>();
+            if (personalitiesTemp.Values.Sum() > 0)
             {
-                Personality offspringPersonality = GetRandomOffspringTrait(personalites);
-                villager.GetComponent<AgentVillagerAdvanced>().personality = offspringPersonality;
-                personalites[offspringPersonality] -= 1;
+                Personality offspringPersonality = GetRandomOffspringTrait(personalitiesTemp);
+                agentVillager.personality = offspringPersonality;
+                personalitiesTemp[offspringPersonality] -= 1;
             }
-            if (personalites.Values.Sum() > 0)
+            if (strenghtTemp.Values.Sum() > 0)
             {
-                StrengthTrait offspringPersonality = GetRandomOffspringTrait(strengths);
-                villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = offspringPersonality;
-                strengths[offspringPersonality] -= 1;
+                StrengthTrait offspringStrength = GetRandomOffspringTrait(strenghtTemp);
+                agentVillager.strengthTrait = offspringStrength;
+                strenghtTemp[offspringStrength] -= 1;
             }
-            if (personalites.Values.Sum() > 0)
+            if (speedTemp.Values.Sum() > 0)
             {
-                SpeedTrait offspringPersonality = GetRandomOffspringTrait(speeds);
-                villager.GetComponent<AgentVillagerAdvanced>().speedTrait = offspringPersonality;
-                speeds[offspringPersonality] -= 1;
+                SpeedTrait offspringSpeed = GetRandomOffspringTrait(speedTemp);
+                agentVillager.speedTrait = offspringSpeed;
+                speedTemp[offspringSpeed] -= 1;
             }
             villager.GetComponent<AgentVillagerAdvanced>().floor = floor;
             villager.name = "Villager" + (villagerIndex + 1);
             villager.tag = "Villager";
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;
-            livingVillagersCount++;
             villagerIndex++;
+            villagersToGenerate--;
         }
     }
     public void PlaceFruit(int fruit, AgentVillagerAdvanced agent)
@@ -168,47 +172,37 @@ public class FloorZoneAdvanced : FloorZone
             dominantStrength[agent.strengthTrait] += 1;
         }
     }
-
-    public void SpawnInVillagers()
-    {
-        GameObject spawnPoint = new GameObject();
-        spawnPoint.transform.position = gameObject.transform.position;
-        spawnPoint.transform.parent = gameObject.transform;
-        spawnPoint.transform.localPosition = GenerateCoordinates();
-        GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillager"), spawnPoint.transform.position, Quaternion.identity);
-        villager.GetComponent<AgentVillagerAdvanced>().personality = GetDominantPersonality();
-        villager.GetComponent<AgentVillagerAdvanced>().strengthTrait = GetDominantStrengthTrait();
-        villager.GetComponent<AgentVillagerAdvanced>().speedTrait = GetDominantSpeedTrait();
-        villager.GetComponent<AgentVillagerAdvanced>().floor = floor;
-        villager.name = "Villager" + (villagerIndex + 1);
-        villager.tag = "Villager";
-        CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
-        capsuleCollider.enabled = false;
-        livingVillagersCount++;
-        villagerIndex++;
-    }
   
     public void Reproduce()
     {
-        if (livingVillagersCount < 0)
+        if (GameObject.FindGameObjectsWithTag("Villager").Length < 0)
         {
             Debug.Log("Population can't grow");
             return;
         }
         else
         {
-            //if (FindObjectOfType < GetVillagerStats() > () < 0)
-            //{
-            //    Debug.Log("Population can't grow");
-            //    return;
-            //}
             int newVillagerAmount = GetFruitCount() / livingVillagersCount;
+            Debug.Log("VILLLGERS TO MAKE " + newVillagerAmount);
             reproduction.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
-            GenerateOffSpring(reproduction.getPersonalityDistribution(), reproduction.getStrengthDistribution(), reproduction.getSpeedtDistribution());
+            GenerateOffSpring(newVillagerAmount, reproduction.getPersonalityDistribution(), reproduction.getStrengthDistribution(), reproduction.getSpeedtDistribution());
             dominantPersonality.Clear();
             dominantStrength.Clear();
             dominantSpeed.Clear();
-            Debug.Log("alive: " + livingVillagersCount);
+            dominantPersonality = new SortedList<Personality, int>();
+            dominantPersonality.Add(Personality.Empathetic, 0);
+            dominantPersonality.Add(Personality.Neutral, 0);
+            dominantPersonality.Add(Personality.Selfish, 0);
+
+            dominantStrength = new SortedList<StrengthTrait, int>();
+            dominantStrength.Add(StrengthTrait.Strong, 0);
+            dominantStrength.Add(StrengthTrait.Regular, 0);
+            dominantStrength.Add(StrengthTrait.Weak, 0);
+
+            dominantSpeed = new SortedList<SpeedTrait, int>();
+            dominantSpeed.Add(SpeedTrait.Fast, 0);
+            dominantSpeed.Add(SpeedTrait.Regular, 0);
+            dominantSpeed.Add(SpeedTrait.Slow, 0);
         }
     }
 

@@ -20,7 +20,7 @@ public class CSVWriter : MonoBehaviour
         }
     }
 
-    private string ToCSV()
+    protected string ToCSV()
     {
         int villagersAlive = GameObject.FindGameObjectsWithTag("Villager").Length;
         GiniCalculator giniCalculator = GameObject.Find("GiniCalculator").GetComponent<GiniCalculator>();
@@ -34,7 +34,7 @@ public class CSVWriter : MonoBehaviour
         return sb.ToString();
     }
 
-    private void SaveToFile()
+    protected void SaveToFile()
     {
         string content = ToCSV();
         Debug.Log(content);
@@ -52,12 +52,12 @@ public class CSVWriter : MonoBehaviour
         AssetDatabase.Refresh();
     }
 
-    private bool NoFruitBushes()
+    protected bool NoFruitBushes()
     {
         return GameObject.FindGameObjectsWithTag("Bush").Length <= 0;
     }
 
-    private bool NoVillagers()
+    protected bool NoVillagers()
     {
         return GameObject.FindGameObjectsWithTag("Villager").Length <= 0;
     }

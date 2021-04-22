@@ -22,10 +22,9 @@ public class GenerationBehaviours : MonoBehaviour
     {
         floorzone.Reproduce();
         controller.ReplenishBushes();
-        controller.ProduceNewBushes(Random.Range(3, 6));
+        controller.ProduceNewBushes(Random.Range(3, 7));
         generation += 1;
     }
-
 
     public int GetCurrentGeneration()
     {
@@ -42,7 +41,7 @@ public class GenerationBehaviours : MonoBehaviour
             floorzone.InitialSpawning();
             initialised = true;
         }
-        if (timer >= 60 || timer >= 1 && villagerStats.NoFruitBushes())
+        if (timer >= 30 || timer >= 1 && villagerStats.NoFruitBushes())
         {
             NewGeneration();
             timer = 0;

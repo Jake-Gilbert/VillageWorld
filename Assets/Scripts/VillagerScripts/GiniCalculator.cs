@@ -79,17 +79,17 @@ public class GiniCalculator : MonoBehaviour
         return thresholds;
     }
 
-    private bool VillagersExist()
+    protected bool VillagersExist()
     {
         return GameObject.FindGameObjectsWithTag("Villager").Length > 0 ? true : false;
     }
 
-    private bool BushesExist()
+    protected bool BushesExist()
     {
         return GameObject.FindGameObjectsWithTag("Bush").Length > 0 ? true : false;
     }
 
-    private float[] GetVillagerScores()
+    protected float[] GetVillagerScores()
     {
         int fruitCollected = getVillagerStats.GetTotalFruitCollected();
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
@@ -191,7 +191,7 @@ public class GiniCalculator : MonoBehaviour
         return wealthPerGroup;
     }
 
-    private float CalculateFractionOfRicher(float percentile, int[] villagers)
+    protected float CalculateFractionOfRicher(float percentile, int[] villagers)
     {
         float fraction = 0;
         foreach (int villager in villagers)
@@ -203,7 +203,7 @@ public class GiniCalculator : MonoBehaviour
         }
         return fraction / villagers.Length;
     }
-    private int FruitCollected()
+    protected int FruitCollected()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         int fruitCollected = 0;
@@ -213,7 +213,7 @@ public class GiniCalculator : MonoBehaviour
         }
         return fruitCollected;
     }
-    private int[] WealthPerVillager()
+    protected int[] WealthPerVillager()
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         int[] fruitPerCitizen = new int[villagers.Length];

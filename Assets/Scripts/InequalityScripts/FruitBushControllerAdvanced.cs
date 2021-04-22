@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FruitBushControllerAdvanced : FruitBushController
@@ -13,19 +14,22 @@ public class FruitBushControllerAdvanced : FruitBushController
 
     public void ReplenishBushes()
     {
-        int bushesToReplenish = (int) (depletedBushes.Count * (Random.Range(0.3F, 0.9F) + 0.1));
+        int bushesToReplenish = (int) (depletedBushes.Count * (Random.Range(0.3F, 0.9F)));
+        List<GameObject> indexesToRemove = new List<GameObject>();
         for (int i = 0; i < bushesToReplenish; i++)
         {
             if (depletedBushes[i] == null)
             {
-                depletedBushes.RemoveAt(i);
+                indexesToRemove.Add(depletedBushes[i]);
             }
             else
             {
                 depletedBushes[i].SetActive(true);
-                depletedBushes.RemoveAt(i);
+                depletedBushes[i].GetComponent<FruitBush>().SpawnFruit();
+                indexesToRemove.Add(depletedBushes[i]);
             }
         }
+        depletedBushes.Except(indexesToRemove);      
     }
 
     public void ProduceNewBushes(int hectaresToUse)
