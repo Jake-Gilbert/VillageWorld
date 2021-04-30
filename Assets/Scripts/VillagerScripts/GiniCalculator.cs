@@ -114,7 +114,6 @@ public class GiniCalculator : MonoBehaviour
         {
             proportionOfWealth = CalculateQuantityOfWealth(thresholds, wealthPerCitizen);
             float[] percentageOfWealth = CalculateProportionOfWealth(proportionOfWealth, fruitCollected);
-            Debug.Log("Proportion " + string.Join(",", proportionOfWealth));
             for (int i = 0; i < scores.Length; i++)
             {
                 float richer = CalculateFractionOfRicher(thresholds[i], wealthPerCitizen);
@@ -164,8 +163,6 @@ public class GiniCalculator : MonoBehaviour
             wealthProportion[i] = (float)proportionOfWealth[i] / fruitCollected;
             wealthProportion[i] = (float) System.Math.Round(wealthProportion[i], 3);
         }
-        Debug.Log("fruit collected " + fruitCollected);
-        Debug.Log("proportion of welath " + string.Join(",", wealthProportion));
         return wealthProportion;
     }
     public int[] CalculateQuantityOfWealth(float[] thresholds, int[] wealthPerVillager)
@@ -187,7 +184,6 @@ public class GiniCalculator : MonoBehaviour
                 }
             }
         }
-        Debug.Log("wealth per group: " + string.Join(",", wealthPerGroup));
         return wealthPerGroup;
     }
 

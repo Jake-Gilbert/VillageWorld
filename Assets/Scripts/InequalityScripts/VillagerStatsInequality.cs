@@ -7,8 +7,10 @@ using UnityEngine;
 public class VillagerStatsInequality : VillagerStats
 {
     private TMP_Text dominantP;
+    [SerializeField]
+    private TMP_Text quantityOfPersonalities;
     //private TMP_Text dominantStr;
-    private SortedList<int, int> maximumAliveInGeneration = new SortedList<int, int>();
+    public SortedList<int, int> maximumAliveInGeneration = new SortedList<int, int>();
     private int maximumAlive = 0;
     //private TMP_Text dominantSpd;
     private FloorZoneAdvanced floorZone;
@@ -23,18 +25,18 @@ public class VillagerStatsInequality : VillagerStats
 
     public KeyValuePair<AgentVillagerAdvanced.Personality, int> getDominantPersonality()
     {
-        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
-        int pCount = 0;
-        foreach (GameObject villager in villagers)
-        {
-            if (villager.GetComponent<AgentVillagerAdvanced>().personality == floorZone.GetDominantPersonality())
-            {
-                pCount++;
-            }
-        }
-        KeyValuePair<AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
-        //dominantPCount = pCount;
-        return dominantP;
+        return new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), floorZone.GetPersonalitiesAndQuantities()[floorZone.GetDominantPersonality()]);
+        //int pCount = 0;
+        //foreach (GameObject villager in villagers)
+        //{
+        //    if (villager.GetComponent<AgentVillagerAdvanced>().personality == floorZone.GetDominantPersonality())
+        //    {
+        //        pCount++;
+        //    }
+        //}
+        //KeyValuePair<AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
+        ////dominantPCount = pCount;
+        //return dominantP;
     }
 
     public int GetQuantityOfPersonality(AgentVillagerAdvanced.Personality personality)
@@ -68,7 +70,7 @@ public class VillagerStatsInequality : VillagerStats
     }
     private void Update()
     {
-
+        quantityOfPersonalities.text = string.Join(",",floorZone.GetPersonalitiesAndQuantities());
     }
 
     public int GetAverageFruit()

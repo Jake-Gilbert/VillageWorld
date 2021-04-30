@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerationBehaviours : MonoBehaviour
+public class GenerationBehavioursEvolution : MonoBehaviour
 {
     private int generation;
-    private FloorZoneAdvanced floorzone;
+    private FloorZoneEvolution floorzone;
     private FruitBushControllerAdvanced controller;
     private GetVillagerStats villagerStats;
     private bool initialised;
@@ -21,11 +21,13 @@ public class GenerationBehaviours : MonoBehaviour
     private void NewGeneration()
     {
         floorzone.Reproduce();
-        floorzone.ResetFruitCountInGeneration();
+        //floorzone.ResetFruitCountInGeneration();
         controller.ReplenishBushes();
         controller.ProduceNewBushes(Random.Range(3, 7));
         generation += 1;
     }
+
+
 
     public int GetCurrentGeneration()
     {
@@ -34,15 +36,14 @@ public class GenerationBehaviours : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!initialised) 
+        if (!initialised)
         {
-            floorzone = FindObjectOfType<FloorZoneAdvanced>();
-            controller = FindObjectOfType<FruitBushControllerAdvanced>();
-            villagerStats = FindObjectOfType<GetVillagerStats>();
+            floorzone = FindObjectOfType<FloorZoneEvolution>();
+            controller = FindObjectOfType<FruitBushControllerAdvanced>();      
             floorzone.InitialSpawning();
             initialised = true;
         }
-        if (timer >= 30 || timer >= 1 && villagerStats.NoFruitBushes())
+        if (timer >= 30)
         {
             if (GameObject.FindGameObjectsWithTag("Villager").Length <= 0)
             {
@@ -60,3 +61,4 @@ public class GenerationBehaviours : MonoBehaviour
 
 
 }
+

@@ -47,7 +47,7 @@ public class ReproductionWithBias : MonoBehaviour
             {
                 return lowerBound.Key;
             }
-            else if (value <= 0.3)
+            else if (value <= 0.3 &&  value > 0.15)
             {
                 return middleBound.Key;
             }
@@ -60,7 +60,7 @@ public class ReproductionWithBias : MonoBehaviour
             {
                 return lowerBound.Key;
             }
-            else if (value <= middleBound.Value)
+            else if (value <= middleBound.Value && value > lowerBound.Value)
             {
                 return middleBound.Key;
             }

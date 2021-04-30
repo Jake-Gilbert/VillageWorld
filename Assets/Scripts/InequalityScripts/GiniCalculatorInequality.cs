@@ -7,10 +7,12 @@ using UnityEngine;
 public class GiniCalculatorInequality : GiniCalculator
 {
     public List<string> inequalityValues;
+    public FloorZoneAdvanced floorZone;
     [SerializeField]
     private VillagerStatsInequality villagerStatsInequality;
     [SerializeField]
     private GenerationBehaviours behaviours;
+    private int villagerCount = 0;
     private int currentGeneration = 1;
     public bool running = true;
     private bool savedInfoForGeneration = false;
@@ -28,7 +30,11 @@ public class GiniCalculatorInequality : GiniCalculator
 
     private void Update()
     {
-        if (currentGeneration > 10)
+        if (floorZone == null)
+        {
+            floorZone = FindObjectOfType<FloorZoneAdvanced>();
+        }
+        if (currentGeneration >= 21 || GameObject.FindGameObjectsWithTag("Villager").Length <= 0)
         {
             running = false;
         }
@@ -38,6 +44,7 @@ public class GiniCalculatorInequality : GiniCalculator
         }
         if (behaviours.timer >= 29.5F && running && !savedInfoForGeneration)
         {
+            Debug.Log(string.Join(",",GetVillagerScores()));
             StringBuilder sb = new StringBuilder();
             sb.Append(currentGeneration);
             sb.Append(",");
@@ -46,6 +53,8 @@ public class GiniCalculatorInequality : GiniCalculator
             sb.Append(GameObject.FindGameObjectsWithTag("Villager").Length);
             sb.Append(",");
             sb.Append(FindObjectOfType<FloorZoneAdvanced>().GetFruitCount());
+            sb.Append(",");
+            sb.Append(FindObjectOfType<FloorZoneAdvanced>().GetFruitCountInGeneration());
             sb.Append(",");
             sb.Append(GameObject.FindGameObjectsWithTag("Fruit").Length);
             sb.Append(",");
@@ -76,7 +85,44 @@ public class GiniCalculatorInequality : GiniCalculator
             inequalityValues.Add(sb.ToString());
             savedInfoForGeneration = true;
             currentGeneration += 1;
+        }  
+
+    }
+
+    public new float[] GetVillagerScores()
+    {
+        int fruitCollected = floorZone.GetFruitCountInGeneration();
+        GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
+        if (villagerCount == 0)
+        {
+            villagerCount = GameObject.FindGameObjectsWithTag("Villager").Length;
         }
 
+        float[] percentiles = new float[] { 0.02F, 0.15F, 0.3F, 0.5F };
+        float[] thresholds = CalculateThresholds(percentiles, fruitCollected);
+        int[] proportionOfWealth = new int[4];
+        int[] wealthPerCitizen = WealthPerVillager();
+        float[] scores = new float[4];
+        int[] populationDivide = CalculatePopulationDivide(thresholds, wealthPerCitizen);
+        if (fruitCollected == 0)
+        {
+            proportionOfWealth[0] = 1;
+            float percentageOfPopulation = populationDivide[0] / villagers.Length;
+            scores[0] = proportionOfWealth[0] * (percentageOfPopulation + 2 * 0);
+        }
+        else
+        {
+            proportionOfWealth = CalculateQuantityOfWealth(thresholds, wealthPerCitizen);
+            float[] percentageOfWealth = CalculateProportionOfWealth(proportionOfWealth, fruitCollected);
+            Debug.Log("Proportion " + string.Join(",", proportionOfWealth));
+            for (int i = 0; i < scores.Length; i++)
+            {
+                float richer = CalculateFractionOfRicher(thresholds[i], wealthPerCitizen);
+                float percentageOfPopulation = populationDivide[i] / villagerCount;
+                scores[i] = percentageOfWealth[i] * (percentageOfPopulation + (2 * richer));
+                scores[i] = (float)System.Math.Round(scores[i], 3);
+            }
+        }
+        return scores;
     }
 }

@@ -11,11 +11,13 @@ public class FloorZoneAdvanced : FloorZone
     private ReproductionWithBias reproduction;
     int livingVillagersCount;
     static int villagerIndex;
+    private int currentGeneration = 1;
     private List<Vector3> positionsAdvanced;
     private SortedList<Personality, int> dominantPersonality;
     private SortedList<StrengthTrait, int> dominantStrength;
     private SortedList<SpeedTrait, int> dominantSpeed;
-    int totalFruitCount;
+    int totalFruitCount = 0;
+    private int fruitCountOfGeneration = 0;
     int currentFruitSupply;
     private void Awake()
     {
@@ -45,17 +47,16 @@ public class FloorZoneAdvanced : FloorZone
         //int villagersToSpawn = (int)(amountOfAgents * Random.Range(0.8F, 1) + 1);
         // GenerateInitialAgents(villagersToSpawn);
         SortedList<Personality, int> personalityAndQuantity = new SortedList<Personality, int>();
-        personalityAndQuantity.Add(Personality.Empathetic, 3);
-       // personalityAndQuantity.Add(Personality.Neutral, 3);
-       // personalityAndQuantity.Add(Personality.Selfish, 3);
-        GenerateInitialAgentsNotRandom(6, personalityAndQuantity);
+        personalityAndQuantity.Add(Personality.Empathetic, 2);
+        personalityAndQuantity.Add(Personality.Neutral, 2);
+        personalityAndQuantity.Add(Personality.Selfish, 6);
+        GenerateInitialAgentsNotRandom(personalityAndQuantity);
     }
 
     public SortedList<Personality, int> GetPersonalitiesAndQuantities()
     {
         return dominantPersonality;
     }
-
     public SortedList<StrengthTrait, int> getStrengthsAndQuantities()
     {
         return dominantStrength;
@@ -89,6 +90,17 @@ public class FloorZoneAdvanced : FloorZone
         return totalFruitCount;
     }
 
+    public int GetFruitCountInGeneration()
+    {
+        Debug.Log(fruitCountOfGeneration);
+        return fruitCountOfGeneration;
+    }
+
+    public void ResetFruitCountInGeneration()
+    {
+        fruitCountOfGeneration = 0;
+    }
+
     private void GenerateInitialAgents(int villagersToSpawn)
     {
         for (int i = 0; i < villagersToSpawn; i++)
@@ -111,7 +123,7 @@ public class FloorZoneAdvanced : FloorZone
         }
     }
 
-    private void GenerateInitialAgentsNotRandom(int villagersToSpawn, SortedList<Personality, int> quantityOfEachPersonality)
+    private void GenerateInitialAgentsNotRandom(SortedList<Personality, int> quantityOfEachPersonality)
     {
         SortedList<Personality, int> tempPersonalityList = new SortedList<Personality, int>( quantityOfEachPersonality);
         while (tempPersonalityList.Values.Sum() > 0)
@@ -181,6 +193,7 @@ public class FloorZoneAdvanced : FloorZone
         if (fruit > 0)
         {
             totalFruitCount += fruit;
+            fruitCountOfGeneration += fruit;
             dominantPersonality[agent.personality] += 1;
             dominantSpeed[agent.speedTrait] += 1;
             dominantStrength[agent.strengthTrait] += 1;
@@ -218,10 +231,11 @@ public class FloorZoneAdvanced : FloorZone
         }
         else
         {
-            int newVillagerAmount = GetFruitCount() / livingVillagersCount;
+            int newVillagerAmount = GetFruitCount() / FindObjectOfType<VillagerStatsInequality>().GetMaximumAliveInGeneration(currentGeneration);
             reproduction.ProduceNewGeneration(newVillagerAmount, dominantPersonality, dominantSpeed, dominantStrength);
             GenerateOffSpring(newVillagerAmount, reproduction.getPersonalityDistribution(), reproduction.getStrengthDistribution(), reproduction.getSpeedtDistribution());
-            StartCoroutine(ResetStructures());  
+            StartCoroutine(ResetStructures());
+            currentGeneration++;
         }
     }
 
