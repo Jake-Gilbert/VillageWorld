@@ -10,7 +10,7 @@ public class AgentVillager1 : MonoBehaviour
     public GameObject closestBush;
     public RectTransform energyBar;
     public int currentHeldFruit; 
-    protected int totalFruitCollected;
+    private int totalFruitCollected;
     public float currentEnergy;
     public float baseSpeed;
     public Vector3 randomPos;
@@ -72,13 +72,13 @@ public class AgentVillager1 : MonoBehaviour
             agent.SetDestination(floorZone.transform.position);
             if (!placed && gameObject.transform.position.x <= floorZone.transform.position.x + 2 && gameObject.transform.position.z <= floorZone.transform.position.z + 2)
             {
+                placed = true;
                 StartCoroutine(WaitSeconds(1));
                 FloorZone floor = FindObjectOfType<FloorZone>();
                 floor.PlaceFruit(currentHeldFruit);
                 totalFruitCollected += currentHeldFruit;
                 currentHeldFruit = 0;               
                 currentEnergy += 10;
-                placed = true;             
             }           
             return;
         }

@@ -22,9 +22,15 @@ public class CSVWriterInequality : CSVWriter
         if (!writtenToCsv && !FindObjectOfType<GiniCalculatorInequality>().running)
         {
             writtenToCsv = true;
+            giniCalculator.running = false;
             SaveToFile();
         }
-
+        if (GameObject.FindGameObjectsWithTag("Villager").Length <= 0)
+        {
+            writtenToCsv = true;
+            giniCalculator.running = false;
+            SaveToFile();
+        }
         if (Input.GetKey(KeyCode.Space))
         {
             writtenToCsv = true;
@@ -37,7 +43,7 @@ public class CSVWriterInequality : CSVWriter
     {
         int villagersAlive = GameObject.FindGameObjectsWithTag("Villager").Length;
         StringBuilder sb = new StringBuilder("Generation,Max Population, Final Population," +
-            "TotalFruitCollected, FruitAvailable, MinFruitCollected,MaxFruitColllected,AvgFruitCollected, Dominant Personality, Dominant Speed," +
+            "TotalFruitCollected, FruitCollectedGeneration, FruitAvailable, MinFruitCollected,MaxFruitColllected,AvgFruitCollected, Dominant Personality, Dominant Speed," +
             "Dominant Strength , Quantity of Selfish, Quantity of Neutral, Quantity of Empathetic ,Gini");
         foreach (string csvInfo in giniCalculator.inequalityValues)
         {
@@ -46,7 +52,7 @@ public class CSVWriterInequality : CSVWriter
             sb.Append("\n").Append(values[0]).Append(",").Append(values[1]).Append(",").Append(values[2]).Append(",").Append(values[3]).Append(",");
             sb.Append(values[4]).Append(",").Append(values[5]).Append(",").Append(values[6]).Append(",").Append(values[7]).Append(",").Append(values[8]);
             sb.Append(",").Append(values[9]).Append(",").Append(values[10]).Append(",").Append(values[11]).Append(",").Append(values[12]).Append(",");
-            sb.Append(values[13]).Append(",").Append(values[14]);
+            sb.Append(values[13]).Append(",").Append(values[14]).Append(",").Append(values[15]);
         }
         return sb.ToString();
     }
