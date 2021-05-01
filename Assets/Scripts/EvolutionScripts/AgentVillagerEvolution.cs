@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AgentVillagerEvolution : AgentVillager1
 {
     new GameObject floor;
     public GameObject nearestVillager;
-    //public Material selfish;
-    //public Material empathic;
     public RectTransform deadEnergy;
-    private float desireToShare;
-    private float desireToReveal;
+    public List<float> traits = new List<float>();
+    public float desireToShare;
+    public float desireToReveal;
+    public float speed;
+    public float baseEnergyLossRate;
     private float energyLossRate;
     private bool sharing;
     private int totalFruitCollected;
     public bool receivedFruit;
     private bool revealing;
-    private int carryingCapacity;
+    public int carryingCapacity;
     public bool villagerSeen;
 
     private void Start()
@@ -81,11 +83,11 @@ public class AgentVillagerEvolution : AgentVillager1
     {
         if (currentHeldFruit > 0)
         {
-            energyLossRate = 1 + (0.03F * currentHeldFruit) + (agent.speed / 10) - 1;
+            energyLossRate = baseEnergyLossRate + (0.03F * currentHeldFruit) + (speed / 10) - 1;
         }
         else
         {
-            energyLossRate = 1 + (agent.speed / 10 - 1);
+            energyLossRate = baseEnergyLossRate + (speed / 10 - 1);
         }
     }
     private IEnumerator loseEnergy()
@@ -99,12 +101,43 @@ public class AgentVillagerEvolution : AgentVillager1
         desireToReveal = Random.Range(-10, 11) + 50;
         desireToShare = Random.Range(-10, 11) + 50;
         currentEnergy = Random.Range(-10, 11) + 60;
+        baseEnergyLossRate = (float) System.Math.Round(Random.Range(-0.2F, 0.3F) + 1, 3);
         deadEnergy.sizeDelta = new Vector2(currentEnergy, deadEnergy.sizeDelta.y);
         energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
         agent.speed = Random.Range(-3, 4) + 10;
+        speed = agent.speed;
         carryingCapacity = Random.Range(-2, 3) + 3;
         agent.acceleration = agent.speed;
+        traits.Add(desireToReveal);
+        traits.Add(desireToShare);
+        traits.Add(currentEnergy);
+        traits.Add(baseEnergyLossRate);
+        traits.Add(speed);
+        traits.Add(carryingCapacity);
     }
+
+    public void GenerateFromAncestor(List<float> traits)
+    {
+        Debug.Log(string.Join(",", traits));
+        desireToReveal = traits[0];
+        desireToShare = traits[1];
+        currentEnergy = traits[2];
+        baseEnergyLossRate = traits[3];
+        deadEnergy.sizeDelta = new Vector2(currentEnergy, deadEnergy.sizeDelta.y);
+        energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
+        GetComponent<NavMeshAgent>().speed = traits[4];
+        agent.speed = 0;
+        agent.speed = traits[4];
+        speed = agent.speed;
+        carryingCapacity = (int)traits[5];
+        this.traits.Add(desireToReveal);
+        this.traits.Add(desireToShare);
+        this.traits.Add(currentEnergy);
+        this.traits.Add(baseEnergyLossRate);
+        this.traits.Add(speed);
+        this.traits.Add(carryingCapacity);
+    }
+
 
     private void FixedUpdate()
     {
@@ -157,7 +190,7 @@ public class AgentVillagerEvolution : AgentVillager1
                     floor.PlaceFruit(currentHeldFruit, this);
                     totalFruitCollected += currentHeldFruit;
                     currentEnergy += currentHeldFruit * 10;
-                    if (currentEnergy > deadEnergy.sizeDelta.x) 
+                    if (currentEnergy > deadEnergy.sizeDelta.x)
                     {
                         currentEnergy = deadEnergy.sizeDelta.x;
                     }
@@ -212,9 +245,4 @@ public class AgentVillagerEvolution : AgentVillager1
             }
         }
     }
-
-
-   
-
-
 }

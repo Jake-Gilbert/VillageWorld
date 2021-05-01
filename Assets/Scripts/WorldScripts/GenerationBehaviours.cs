@@ -10,7 +10,6 @@ public class GenerationBehaviours : MonoBehaviour
     private GetVillagerStats villagerStats;
     private bool initialised;
     public float timer;
-    // Start is called before the first frame update
     private void Start()
     {
         generation = 0;

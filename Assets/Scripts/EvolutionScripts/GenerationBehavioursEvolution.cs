@@ -8,6 +8,7 @@ public class GenerationBehavioursEvolution : MonoBehaviour
     private FloorZoneEvolution floorzone;
     private FruitBushControllerAdvanced controller;
     private GetVillagerStats villagerStats;
+    private int fruitCountOfGeneration = 0;
     private bool initialised;
     public float timer;
     // Start is called before the first frame update
@@ -20,8 +21,8 @@ public class GenerationBehavioursEvolution : MonoBehaviour
 
     private void NewGeneration()
     {
-        floorzone.Reproduce();
-        //floorzone.ResetFruitCountInGeneration();
+        floorzone.Reproduce(generation + 1);
+        floorzone.ResetFruitCountInGeneration();
         controller.ReplenishBushes();
         controller.ProduceNewBushes(Random.Range(3, 7));
         generation += 1;

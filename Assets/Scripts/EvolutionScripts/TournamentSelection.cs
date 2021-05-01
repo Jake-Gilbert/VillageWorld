@@ -16,7 +16,10 @@ public class TournamentSelection : MonoBehaviour
     {
         List<AgentVillagerEvolution> winners = new List<AgentVillagerEvolution>();
         winners.Add(ReturnFittestMember());
+        TournamentCandidate candidate =  tournamentPool.Where(x => x.candidate == winners[0]).FirstOrDefault();
+        tournamentPool.Remove(candidate);
         winners.Add(ReturnFittestMember());
+        tournamentPool.Add(candidate);
         return winners;
     }
     
