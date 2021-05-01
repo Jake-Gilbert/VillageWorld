@@ -603,6 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3572b01e9012bd429c9a00f22169a30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dominantP: {fileID: 1261350153}
   quantityOfPersonalities: {fileID: 1925113514}
 --- !u!1 &886974442
 GameObject:

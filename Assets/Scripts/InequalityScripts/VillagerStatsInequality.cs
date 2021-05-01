@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class VillagerStatsInequality : VillagerStats
 {
+    [SerializeField]
     private TMP_Text dominantP;
     [SerializeField]
     private TMP_Text quantityOfPersonalities;
@@ -20,7 +21,7 @@ public class VillagerStatsInequality : VillagerStats
     private float timer = 0;
     void Start()
     {
-        dominantP = GameObject.Find("DominantPersonality").GetComponent<TMP_Text>();
+        //dominantP = GameObject.Find("DominantPersonality").GetComponent<TMP_Text>();
     }
 
     public KeyValuePair<AgentVillagerAdvanced.Personality, int> getDominantPersonality()
@@ -152,7 +153,7 @@ public class VillagerStatsInequality : VillagerStats
         {
             if (getDominantPersonality().Value > dominantPCount)
             {
-                dominantP.text = floorZone.GetDominantPersonality().ToString();
+               dominantP.text = floorZone.GetDominantPersonality().ToString();
             }
             timer = 0;
         }

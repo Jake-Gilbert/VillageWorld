@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1285736570688549236}
   - component: {fileID: 6760841388664249534}
   m_Layer: 0
-  m_Name: agentVillager
+  m_Name: agentEvolutionCompetitive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3632947419589992682}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bddbe2965c864d43bce649fd0eee05a, type: 3}
   m_Name: 
