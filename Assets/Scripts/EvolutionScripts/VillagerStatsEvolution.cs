@@ -101,6 +101,13 @@ public class VillagerStatsEvolution : VillagerStats
     {
         return GameObject.FindGameObjectsWithTag("Villager").Average(x => x.GetComponent<AgentVillagerEvolution>().deadEnergy.sizeDelta.x);
     }
+
+
+    public double GetAverageEnergyLossRate()
+    {
+        return System.Math.Round(GameObject.FindGameObjectsWithTag("Villager").Average(x => x.GetComponent<AgentVillagerEvolution>().baseEnergyLossRate), 3);
+    }
+
     public double GetAverageCarryingCapacity()
     {
         return System.Math.Round(GameObject.FindGameObjectsWithTag("Villager").Average(x => x.GetComponent<AgentVillagerEvolution>().carryingCapacity), 3);
@@ -110,6 +117,7 @@ public class VillagerStatsEvolution : VillagerStats
     {
         return System.Math.Round(GameObject.FindGameObjectsWithTag("Villager").Average(x => x.GetComponent<AgentVillagerEvolution>().speed), 3);
     }
+
 
     public double GetAverageDesireToShare()
     {

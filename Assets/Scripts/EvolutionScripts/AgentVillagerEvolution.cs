@@ -118,14 +118,12 @@ public class AgentVillagerEvolution : AgentVillager1
 
     public void GenerateFromAncestor(List<float> traits)
     {
-        Debug.Log(string.Join(",", traits));
         desireToReveal = traits[0];
         desireToShare = traits[1];
         currentEnergy = traits[2];
         baseEnergyLossRate = traits[3];
         deadEnergy.sizeDelta = new Vector2(currentEnergy, deadEnergy.sizeDelta.y);
         energyBar.sizeDelta = new Vector2(currentEnergy, energyBar.sizeDelta.y);
-        GetComponent<NavMeshAgent>().speed = traits[4];
         agent.speed = 0;
         agent.speed = traits[4];
         speed = agent.speed;

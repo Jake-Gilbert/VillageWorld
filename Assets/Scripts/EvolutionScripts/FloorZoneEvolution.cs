@@ -10,12 +10,15 @@ public class FloorZoneEvolution : MonoBehaviour
     private int totalFruitCount;
     private int fruitCountOfGeneration;
     private float valueOfFruit;
+    private int currentGeneration = 1;
     private List<Vector3> positions;
+    float timer = 0;
+    float secondsTimer = 0;
     private List<TournamentCandidate> candidates;
     private void Awake()
     {
         candidates = new List<TournamentCandidate>();
-        valueOfFruit = 1;
+        valueOfFruit = 1.5F;
         positions = new List<Vector3>();
         totalFruitCount = 0;
         fruitCountOfGeneration = 0;
@@ -23,7 +26,7 @@ public class FloorZoneEvolution : MonoBehaviour
 
     public void InitialSpawning()
     {
-        GenerateInitialAgents(10);
+        GenerateInitialAgents(20);
     }
     private void GenerateInitialAgents(int villagersToSpawn)
     {
@@ -36,7 +39,7 @@ public class FloorZoneEvolution : MonoBehaviour
             GameObject villager = (GameObject)Instantiate(Resources.Load("agentVillagerEvolution"), spawnPoint.transform.position, Quaternion.identity);
             AgentVillagerEvolution agent = villager.GetComponent<AgentVillagerEvolution>();
             agent.GenerateInitialTraits();
-            villager.name = "Villager" + (i + 1);
+            villager.name = "Villager" + currentGeneration;
             CapsuleCollider capsuleCollider = villager.GetComponent(typeof(CapsuleCollider)) as CapsuleCollider;
             capsuleCollider.enabled = false;
             Destroy(spawnPoint);
@@ -50,10 +53,32 @@ public class FloorZoneEvolution : MonoBehaviour
 
     public int GetFruitCountInGeneration()
     {
-        Debug.Log(fruitCountOfGeneration);
         return fruitCountOfGeneration;
     }
 
+
+    private void FixedUpdate()
+    {
+        timer += Time.deltaTime;
+        //secondsTimer += Time.deltaTime;
+        if (timer >= 1)
+        {
+            DecreaseValue(0.05F);
+            timer = 0;
+        }
+        Debug.Log(valueOfFruit);
+    }
+
+    void IncreaseValue(float increaseValue)
+    {
+        valueOfFruit += increaseValue;
+    }
+
+    
+    void DecreaseValue(float decreaseValue)
+    {
+        valueOfFruit -= decreaseValue;
+    }
 
 
     public void ResetFruitCountInGeneration()
@@ -61,16 +86,23 @@ public class FloorZoneEvolution : MonoBehaviour
         fruitCountOfGeneration = 0;
     }
 
-    public void DestroyAllVillagers()
+    public float GetFittestCandidate()
+    {
+        return candidates.OrderByDescending(x => x.fitness).First().fitness;
+    }
+    public void DestroyLastGenerationVillagers(int currentGeneration)
     {
         GameObject[] villagers = GameObject.FindGameObjectsWithTag("Villager");
         foreach (GameObject villager in villagers)
         {
-            Destroy(villager);
+            if (villager.name.Contains(currentGeneration.ToString()))
+            {
+                Destroy(villager);
+            }
         }
     }
 
-    private void ProduceOffspringPair(int villagersToSpawn, TournamentSelection tournament)
+    private void ProduceOffspringPair(int villagersToSpawn, TournamentSelection tournament, int currentGeneration)
     {
             List<AgentVillagerEvolution> parents = tournament.GetTournamentWinners();
             Crossover crossover = new Crossover(parents[0], parents[1]);
@@ -88,20 +120,27 @@ public class FloorZoneEvolution : MonoBehaviour
             GameObject offspringOne = (GameObject)Instantiate(Resources.Load("agentVillagerEvolution"), spawnPoint.transform.position, Quaternion.identity);
             GameObject offspringTwo = (GameObject)Instantiate(Resources.Load("agentVillagerEvolution"), spawnPoint2.transform.position, Quaternion.identity);
             AgentVillagerEvolution offSpringOneAgent = offspringOne.GetComponent<AgentVillagerEvolution>();
+            offSpringOneAgent.name = "Villager" + (currentGeneration + 1);    
             offSpringOneAgent.GenerateFromAncestor(crossover.offspring[0]);
             AgentVillagerEvolution offSpringTwoAgent = offspringTwo.GetComponent<AgentVillagerEvolution>();
+            offSpringTwoAgent.name = "Villager" + (currentGeneration + 1);
             offSpringTwoAgent.GenerateFromAncestor(crossover.offspring[1]);
     }
 
     public void Reproduce(int currentGeneration)
     {
-        int newVillagerAmount = totalFruitCount / FindObjectOfType<VillagerStatsEvolution>().GetMaximumAliveInGeneration(currentGeneration);
+        Debug.Log(string.Join(",", candidates.Select(x => x.fitness)));
+        int newVillagerAmount = 20;
         for (int i = 0; i < newVillagerAmount / 2; i++)
         {
             TournamentSelection tournament = new TournamentSelection(candidates);
-            ProduceOffspringPair(newVillagerAmount, tournament);
+            ProduceOffspringPair(newVillagerAmount, tournament, currentGeneration);
         }
-
+        DestroyLastGenerationVillagers(currentGeneration);
+        candidates = new List<TournamentCandidate>();
+        //secondsTimer = 0;
+        timer = 0;
+        valueOfFruit = 1.5F;
     }
     public void PlaceFruit(int fruit, AgentVillagerEvolution agent)
     {
@@ -111,12 +150,12 @@ public class FloorZoneEvolution : MonoBehaviour
             fruitCountOfGeneration += fruit;
             if (!candidates.Any(t => t.candidate == agent))
             {
-                candidates.Add(new TournamentCandidate(agent, (int)(fruit * valueOfFruit)));
+                candidates.Add(new TournamentCandidate(agent, fruit * valueOfFruit));
             }
             else
             {
                 TournamentCandidate candidate = candidates.Where(x => x.candidate == agent).FirstOrDefault();
-                candidate.fitness += (int)(fruit * valueOfFruit);
+                candidate.fitness += fruit * valueOfFruit;
             }
         }
     }

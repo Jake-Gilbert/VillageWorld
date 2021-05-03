@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
-public class GenerationBehavioursEvolution : MonoBehaviour
+public class GenerationBehaviourCompetition : MonoBehaviour
 {
     private int generation;
-    private FloorZoneEvolution floorzone;
+    private FloorZoneCompetition floorzone;
     private FruitBushControllerAdvanced controller;
     private VillagerStatsEvolution villagerStats;
     public List<string> evolutionValues;
@@ -24,7 +23,7 @@ public class GenerationBehavioursEvolution : MonoBehaviour
 
     private void NewGeneration()
     {
-        RecordCurrentGenerationData();
+      //  RecordCurrentGenerationData();
         floorzone.Reproduce(generation + 1);
         floorzone.ResetFruitCountInGeneration();
         controller.ReplenishBushes();
@@ -41,21 +40,21 @@ public class GenerationBehavioursEvolution : MonoBehaviour
 
     private void RecordCurrentGenerationData()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.Append(villagerStats.GetGeneration()).Append(",").Append(floorzone.GetFruitCount()).Append(",");
-        sb.Append(floorzone.GetFruitCountInGeneration()).Append(",").Append(villagerStats.GetAverageDesireToReveal()).Append(",").Append(villagerStats.GetAverageDesireToShare());
-        sb.Append(",").Append(villagerStats.GetAverageEnergyLossRate()).Append(",").Append(villagerStats.GetAverageEnergyValue()).Append(",").Append(villagerStats.GetAverageSpeed());
-        sb.Append(",").Append(villagerStats.GetAverageCarryingCapacity()).Append(",").Append(floorzone.GetFittestCandidate());
-        evolutionValues.Add(sb.ToString());
+        //juu
+        //sb.Append(villagerStats.GetGeneration()).Append(",").Append(floorzone.GetFruitCount()).Append(",");
+        //sb.Append(floorzone.GetFruitCountInGeneration()).Append(",").Append(villagerStats.GetAverageDesireToReveal()).Append(",").Append(villagerStats.GetAverageDesireToShare());
+        //sb.Append(",").Append(villagerStats.GetAverageEnergyLossRate()).Append(",").Append(villagerStats.GetAverageEnergyValue()).Append(",").Append(villagerStats.GetAverageSpeed());
+        //sb.Append(",").Append(villagerStats.GetAverageCarryingCapacity()).Append(",").Append(floorzone.GetFittestCandidate());
+        //evolutionValues.Add(sb.ToString());
     }
 
     private void FixedUpdate()
     {
         if (!initialised)
         {
-            floorzone = FindObjectOfType<FloorZoneEvolution>();
+            floorzone = FindObjectOfType<FloorZoneCompetition>();
             controller = FindObjectOfType<FruitBushControllerAdvanced>();
-            villagerStats = FindObjectOfType<VillagerStatsEvolution>();
+           // villagerStats = FindObjectOfType<VillagerStatsEvolution>();
             floorzone.InitialSpawning();
             initialised = true;
         }

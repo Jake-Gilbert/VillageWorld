@@ -27,17 +27,6 @@ public class VillagerStatsInequality : VillagerStats
     public KeyValuePair<AgentVillagerAdvanced.Personality, int> getDominantPersonality()
     {
         return new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), floorZone.GetPersonalitiesAndQuantities()[floorZone.GetDominantPersonality()]);
-        //int pCount = 0;
-        //foreach (GameObject villager in villagers)
-        //{
-        //    if (villager.GetComponent<AgentVillagerAdvanced>().personality == floorZone.GetDominantPersonality())
-        //    {
-        //        pCount++;
-        //    }
-        //}
-        //KeyValuePair<AgentVillagerAdvanced.Personality, int> dominantP = new KeyValuePair<AgentVillagerAdvanced.Personality, int>(floorZone.GetDominantPersonality(), pCount);
-        ////dominantPCount = pCount;
-        //return dominantP;
     }
 
     public int GetQuantityOfPersonality(AgentVillagerAdvanced.Personality personality)
