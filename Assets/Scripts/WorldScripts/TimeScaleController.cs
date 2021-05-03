@@ -22,7 +22,7 @@ public class TimeScaleController : MonoBehaviour
         {
             if (Time.timeScale < 4.25F)
             {
-                Time.timeScale += 0.25F;
+                Time.timeScale += 1F;
             }
         }
     }

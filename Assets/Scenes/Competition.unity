@@ -163,7 +163,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 51479279}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc4b4e956c5caef429b5c9c26bc5f755, type: 3}
+  m_Script: {fileID: 11500000, guid: dd53d1b772496a44f810b59faefc44a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sizeX: 100
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 63335420}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 170af30470236c7418643ba2e64b2af8, type: 3}
+  m_Script: {fileID: 11500000, guid: b55e68b7fe951d842b8298274e5d5498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   evolutionValues: []
@@ -695,7 +695,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 824286578}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b21089606b39b541b1e6c202e047095, type: 3}
   m_Name: 
@@ -1894,7 +1894,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1704833411}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa14f6febf92dea4cb94f5ba5a1aae09, type: 3}
   m_Name: 
